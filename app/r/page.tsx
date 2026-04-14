@@ -275,27 +275,38 @@ function ModuleCard({
         {module.description}
       </p>
 
-      {/* Key insight blockquote */}
-      <blockquote
+      {/* Key insight */}
+      <div
         style={{
-          borderLeft: "2px solid var(--accent)",
-          paddingLeft: "18px",
+          background: "#1f1f1f",
+          padding: "8px",
+          borderRadius: "6px",
           marginBottom: "22px",
-          marginLeft: 0,
         }}
       >
         <p
           style={{
-            fontFamily: "var(--font-playfair)",
-            fontStyle: "italic",
-            fontSize: "14px",
-            lineHeight: 1.75,
+            fontFamily: "var(--font-jetbrains)",
+            fontSize: "10px",
+            letterSpacing: "0.12em",
+            textTransform: "uppercase",
+            color: "var(--accent)",
+            marginBottom: "6px",
+          }}
+        >
+          Key Insight
+        </p>
+        <p
+          style={{
+            fontFamily: "var(--font-jetbrains)",
+            fontSize: "13px",
+            lineHeight: 1.85,
             color: "#f0ede6",
           }}
         >
-          &ldquo;{module.insight}&rdquo;
+          {module.insight}
         </p>
-      </blockquote>
+      </div>
 
       {/* Toggle + View Code + Read More row */}
       <div style={{ display: "flex", alignItems: "center", gap: "20px", flexWrap: "wrap" }}>
@@ -810,7 +821,7 @@ export default function RPage() {
               marginBottom: "22px",
             }}
           >
-            SMU Academy · 2025 
+            SMU Academy · 2025 · Distinction
           </p>
           <p
             style={{

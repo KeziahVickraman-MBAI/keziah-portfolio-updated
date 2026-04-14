@@ -10,13 +10,13 @@ const PHOTOS = [
   { src: "/images/goat.jpg",          alt: "Goat"        },
   { src: "/images/coach.jpg",         alt: "Coaching"    },
   { src: "/images/handball.jpg",      alt: "Handball"    },
-  { src: "/images/netball.jpg",       alt: "Netball"     },
+  { src: "/images/ball.jpg",           alt: "Ball"        },
 ];
 
 const DESCRIPTORS = [
   "Quantitative Poet",
   "Teaching Assistant · SMU Academy",
-  "MBAI Candidate · August 2026",
+  "SMU MSc Masters of Business AI (MBAI) Candidate · August 2026",
   "Handball Goalkeeper | Sports Fanatic",
 ];
 
@@ -33,19 +33,17 @@ export default function Home() {
   return (
     <main className="h-screen overflow-hidden bg-bg">
       <section
-        className="w-full max-w-7xl mx-auto px-6 md:px-12 lg:px-20 py-12 md:py-16
-                   grid grid-cols-1 md:grid-cols-[1fr_380px] lg:grid-cols-[1fr_440px]
-                   gap-16 md:gap-10 lg:gap-20 h-full"
+        className="w-full h-full grid grid-cols-2 gap-[40px]"
       >
         {/* ── Left column ── */}
-        <div className="flex flex-col gap-6 justify-center">
+        <div className="flex flex-col gap-6 justify-center pl-12 lg:pl-20">
 
           {/* Location / discipline label */}
           <p
             className="font-mono text-xs tracking-widest text-muted uppercase animate-fade-up"
             style={{ animationDelay: "0ms" }}
           >
-            Singapore · Data Science · AI · Intelligence Systems
+            Singapore · Data Science · AI/ML · Intelligence Systems
           </p>
 
           {/* Name */}
@@ -127,7 +125,7 @@ export default function Home() {
                 src={photo.src}
                 alt={photo.alt}
                 fill
-                sizes="(max-width: 768px) 100vw, 440px"
+                sizes="50vw"
                 className="object-cover object-center"
                 priority={i === 0}
               />

@@ -4,11 +4,10 @@ const NAV_LINKS = [
   { label: "About", href: "/about" },
   { label: "Projects", href: "/projects" },
   { label: "R", href: "/r" },
-  { label: "Lab", href: "/lab/r" },
+  { label: "Python", href: "/python" },
   { label: "AI", href: "/ai" },
   { label: "Grave", href: "/grave" },
   { label: "Research", href: "/research" },
-  { label: "Teaching", href: "/teaching" },
   { label: "Writing", href: "/writing" },
   { label: "Contact", href: "/contact" },
 ] as const;
