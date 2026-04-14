@@ -84,7 +84,7 @@ export function Cursor() {
           borderRadius: "50%",
           background: "var(--accent)",
           pointerEvents: "none",
-          zIndex: 9999,
+          zIndex: 999999,
           willChange: "transform",
         }}
       />
@@ -102,7 +102,7 @@ export function Cursor() {
           borderRadius: "50%",
           border: "1px solid var(--accent2)",
           pointerEvents: "none",
-          zIndex: 9998,
+          zIndex: 999998,
           opacity: 0.6,
           transition: "width 0.2s ease, height 0.2s ease, opacity 0.2s ease, border-color 0.2s ease",
           willChange: "transform",

@@ -183,15 +183,71 @@ function Lightbox({ src, alt, onClose }: { src: string; alt: string; onClose: ()
   );
 }
 
-// ── Notebook modal ─────────────────────────────────────────────────────────
+// ── Interactive plots modal ────────────────────────────────────────────────
 
-function NotebookModal({
-  title,
-  notebookUrl,
-  onClose,
-}: {
+interface ModalTab {
+  label: string;
+  src: string;
+}
+
+interface ModalConfig {
+  moduleId: string;
   title: string;
   notebookUrl: string;
+  tabs: ModalTab[];
+}
+
+const MODAL_CONFIGS: ModalConfig[] = [
+  {
+    moduleId: "m3",
+    title: "M3 · Program Evaluation and Causal Inference",
+    notebookUrl: "/notebooks/module3_assessment_econometrics_dddm25.html",
+    tabs: [
+      { label: "RDD — Tutoring Effect", src: "/notebooks/m3_rdd_interactive.html" },
+      { label: "Synthetic Control — German Reunification", src: "/notebooks/m3_sc_interactive.html" },
+    ],
+  },
+  {
+    moduleId: "m4",
+    title: "M4 · Algorithmic Trading and Computational Finance",
+    notebookUrl: "/notebooks/module4_assessment_algotrading_dddm25.html",
+    tabs: [
+      { label: "Cumulative Returns Comparison", src: "/notebooks/m4_cumreturns_interactive.html" },
+    ],
+  },
+  {
+    moduleId: "m5",
+    title: "M5 · NLP, Sentiment Analysis & Applied LLMs",
+    notebookUrl: "/notebooks/module5_assessment_nlp_dddm25.html",
+    tabs: [
+      { label: "Cancer Survival Rates", src: "/notebooks/m5_cancerresearch_interactive.html" },
+      { label: "Historical Wars — Bubble Chart", src: "/notebooks/m5_warresearch_interactive.html" },
+      { label: "Historical Wars — Timeline", src: "/notebooks/m5_warsviz_interactive.html" },
+    ],
+  },
+  {
+    moduleId: "m6",
+    title: "M6 · End-to-End Business Analytics for Decision-Making",
+    notebookUrl: "/notebooks/module6_assessment_llmintegration_dddm25.html",
+    tabs: [
+      { label: "Cosine Similarity Network", src: "/notebooks/m6_cosinesimilarity_network_interactive.html" },
+      { label: "Affinity Propagation Clusters", src: "/notebooks/m6_APplot_interactive.html" },
+      { label: "Sector AP Clusters", src: "/notebooks/m6_sector_APplot_interactive.html" },
+      { label: "Pairs Trading Equity Curve", src: "/notebooks/m6_pairstradingec_interactive.html" },
+      { label: "Liberation Day Tariffs", src: "/notebooks/m6_liberationday_interactive.html" },
+    ],
+  },
+];
+
+function InteractivePlotsModal({
+  config,
+  activeTab,
+  onTabChange,
+  onClose,
+}: {
+  config: ModalConfig;
+  activeTab: number;
+  onTabChange: (i: number) => void;
   onClose: () => void;
 }) {
   useEffect(() => {
@@ -202,16 +258,18 @@ function NotebookModal({
     return () => document.removeEventListener("keydown", onKey);
   }, [onClose]);
 
+  const currentSrc = config.tabs[activeTab]?.src ?? config.tabs[0].src;
+  const showTabs = config.tabs.length > 1;
+
   return (
     <div
       onClick={onClose}
       style={{
         position: "fixed",
         inset: 0,
-        background: "rgba(0,0,0,0.90)",
+        background: "rgba(0,0,0,0.92)",
         zIndex: 9999,
         display: "flex",
-        flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
       }}
@@ -219,35 +277,76 @@ function NotebookModal({
       <div
         onClick={(e) => e.stopPropagation()}
         style={{
-          width: "90vw",
+          width: "95vw",
+          height: "90vh",
           display: "flex",
           flexDirection: "column",
         }}
       >
-        {/* Modal top bar */}
+        {/* Top bar */}
         <div
           style={{
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
-            marginBottom: "12px",
-            gap: "16px",
-            flexWrap: "wrap",
+            marginBottom: "10px",
+            gap: "12px",
+            flexShrink: 0,
           }}
         >
+          {/* Title — left */}
           <span
             style={{
               fontFamily: "var(--font-jetbrains)",
-              fontSize: "12px",
+              fontSize: "11px",
               letterSpacing: "1px",
               color: "#f0ede6",
+              whiteSpace: "nowrap",
+              flexShrink: 0,
             }}
           >
-            {title}
+            {config.title}
           </span>
-          <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
+
+          {/* Tab pills — center */}
+          {showTabs && (
+            <div
+              style={{
+                display: "flex",
+                gap: "6px",
+                flexWrap: "wrap",
+                justifyContent: "center",
+                flex: 1,
+              }}
+            >
+              {config.tabs.map((tab, i) => (
+                <button
+                  key={i}
+                  onClick={() => onTabChange(i)}
+                  style={{
+                    fontFamily: "var(--font-jetbrains)",
+                    fontSize: "10px",
+                    letterSpacing: "0.5px",
+                    padding: "4px 10px",
+                    borderRadius: "3px",
+                    border: "1px solid var(--accent)",
+                    background: i === activeTab ? "var(--accent)" : "transparent",
+                    color: i === activeTab ? "#0f0f0f" : "var(--accent)",
+                    cursor: "none",
+                    whiteSpace: "nowrap",
+                    transition: "background 0.15s, color 0.15s",
+                  }}
+                >
+                  {tab.label}
+                </button>
+              ))}
+            </div>
+          )}
+
+          {/* Actions — right */}
+          <div style={{ display: "flex", gap: "10px", alignItems: "center", flexShrink: 0 }}>
             <a
-              href={notebookUrl}
+              href={config.notebookUrl}
               target="_blank"
               rel="noopener noreferrer"
               style={{
@@ -283,14 +382,14 @@ function NotebookModal({
             </button>
           </div>
         </div>
+
         {/* iframe */}
         <iframe
-          src={notebookUrl}
+          src={currentSrc}
           style={{
-            width: "90vw",
-            height: "85vh",
+            width: "100%",
+            flex: 1,
             border: "none",
-            borderRadius: "4px",
             display: "block",
           }}
         />
@@ -651,7 +750,8 @@ export default function PythonPage() {
   const [expanded, setExpanded] = useState<Record<string, boolean>>({});
   const [lightbox, setLightbox] = useState<{ src: string; alt: string } | null>(null);
   const [activeSection, setActiveSection] = useState("m1");
-  const [notebookOpen, setNotebookOpen] = useState<string | null>(null);
+  const [activeModal, setActiveModal] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState(0);
 
   useEffect(() => {
     const ids = SIDEBAR_ITEMS.map((s) => s.id);
@@ -676,19 +776,20 @@ export default function PythonPage() {
   const openLightbox = (src: string, alt: string) => setLightbox({ src, alt });
   const closeLightbox = () => setLightbox(null);
 
-  const openNotebook = (id: string) => setNotebookOpen(id);
-  const closeNotebook = () => setNotebookOpen(null);
+  const openModal = (id: string) => { setActiveModal(id); setActiveTab(0); };
+  const closeModal = () => setActiveModal(null);
 
-  const notebookModule = notebookOpen ? MODULES.find((m) => m.id === notebookOpen) : null;
+  const activeModalConfig = activeModal ? MODAL_CONFIGS.find((c) => c.moduleId === activeModal) : null;
 
   return (
     <main style={{ background: "var(--bg)", minHeight: "100vh", paddingTop: "88px", paddingBottom: "80px" }}>
       {lightbox && <Lightbox src={lightbox.src} alt={lightbox.alt} onClose={closeLightbox} />}
-      {notebookModule && notebookModule.notebookUrl && (
-        <NotebookModal
-          title={`${notebookModule.number} · ${notebookModule.title}`}
-          notebookUrl={notebookModule.notebookUrl}
-          onClose={closeNotebook}
+      {activeModalConfig && (
+        <InteractivePlotsModal
+          config={activeModalConfig}
+          activeTab={activeTab}
+          onTabChange={setActiveTab}
+          onClose={closeModal}
         />
       )}
       <SidebarNav activeId={activeSection} />
@@ -864,7 +965,7 @@ export default function PythonPage() {
               isExpanded={!!expanded[mod.id]}
               onToggle={() => toggle(mod.id)}
               onImageClick={openLightbox}
-              onOpenNotebook={mod.notebookUrl ? () => openNotebook(mod.id) : undefined}
+              onOpenNotebook={MODAL_CONFIGS.some((c) => c.moduleId === mod.id) ? () => openModal(mod.id) : undefined}
             />
             {mod.id === "m4" && <Interlude />}
           </Fragment>
