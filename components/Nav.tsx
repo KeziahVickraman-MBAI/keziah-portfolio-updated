@@ -6,7 +6,6 @@ const NAV_LINKS = [
   { label: "Python", href: "/python" },
   { label: "AI", href: "/ai" },
   { label: "Grave", href: "/grave" },
-  { label: "Github", href: "/github" },
   { label: "Contact", href: "/contact" },
 ] as const;
 
@@ -61,6 +60,16 @@ export function Nav() {
             </Link>
           </li>
         ))}
+        <li>
+          <a
+            href="https://github.com/KeziahVickraman"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="nav-link"
+          >
+            Github
+          </a>
+        </li>
       </ul>
 
       <style>{`
