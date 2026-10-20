@@ -48,6 +48,29 @@ function CourseCard({ course }: { course: Course }) {
         </section>
       ) : null}
 
+      {course.exercise && (
+        <section className="ai-exercise">
+          <h4 className="ai-card-label">{course.exercise.label}</h4>
+          <p className="ai-card-text">{course.exercise.summary}</p>
+          <ul className="ai-exercise-links">
+            {course.exercise.links.map((link) => (
+              <li key={link.href}>
+                <a
+                  href={link.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="ai-exercise-link"
+                >
+                  <span>{link.label}</span>
+                  <span aria-hidden="true">↗</span>
+                  <span className="sr-only"> (opens in a new tab)</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
       {course.screenshots?.length ? (
         <div className="ai-card-shots">
           {course.screenshots.map((shot) => (
@@ -208,7 +231,55 @@ export default function AIPage() {
           color: var(--text);
           margin-top: 12px;
         }
-        .ai-card-list { padding-left: 18px; margin-top: 6px; }
+        .ai-card-list {
+          list-style: disc;
+          padding-left: 18px;
+          margin-top: 6px;
+          display: flex;
+          flex-direction: column;
+          gap: 6px;
+        }
+        .ai-card-list li::marker { color: var(--ai-panel-accent); }
+        .ai-exercise {
+          margin-top: 20px;
+          padding: 16px;
+          background: var(--surface);
+          border: 1px solid var(--border);
+          border-radius: 4px;
+        }
+        .ai-exercise .ai-card-text { margin-top: 8px; }
+        .ai-exercise-links {
+          list-style: none;
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+          margin-top: 14px;
+        }
+        .ai-exercise-link {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          gap: 12px;
+          font-family: var(--font-jetbrains), ui-monospace, monospace;
+          font-size: 12px;
+          letter-spacing: 0.5px;
+          line-height: 1.4;
+          color: var(--ai-panel-accent);
+          border: 1px solid var(--ai-panel-accent);
+          border-radius: 3px;
+          padding: 10px 12px;
+          text-decoration: none;
+          transition: background 0.2s ease, color 0.2s ease;
+        }
+        .ai-exercise-link:hover {
+          background: var(--ai-panel-accent);
+          color: var(--bg);
+        }
+        .ai-exercise-link:focus-visible,
+        .ai-card-link:focus-visible {
+          outline: 2px solid var(--ai-panel-accent);
+          outline-offset: 3px;
+        }
         .ai-card-section { margin-top: 16px; }
         .ai-card-label {
           font-family: var(--font-jetbrains), ui-monospace, monospace;
