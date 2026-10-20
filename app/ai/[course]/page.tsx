@@ -2,7 +2,12 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getCourse, getCoursesWithContent, type CourseSection } from "../courses";
+import {
+  getCourse,
+  getCoursesWithContent,
+  type CourseProject,
+  type CourseSection,
+} from "../courses";
 import { Toolchain } from "./Toolchain";
 
 // Only courses with portfolio content get a page; anything else is a 404.
@@ -309,31 +314,64 @@ export default async function CoursePage(props: PageProps<"/ai/[course]">) {
           color: var(--text);
           margin-top: 14px;
         }
+        /* Project callout: accent-tinted panel with a solid accent button */
+        .aic-project {
+          display: flex;
+          flex-wrap: wrap;
+          align-items: center;
+          justify-content: space-between;
+          gap: 16px 24px;
+          margin-top: 24px;
+          padding: 20px 22px;
+          border: 1px solid var(--aic-accent);
+          border-radius: 6px;
+          background: color-mix(in srgb, var(--aic-accent) 12%, var(--panel));
+        }
+        /* lighter tint in light mode keeps accent text above 4.5:1 */
+        :root[data-theme="light"] .aic-project {
+          background: color-mix(in srgb, var(--aic-accent) 6%, var(--panel));
+        }
+        .aic-section > .aic-project:first-child { margin-top: 0; }
+        .aic-project-label {
+          font-family: var(--font-jetbrains), ui-monospace, monospace;
+          font-size: 10px;
+          letter-spacing: 2px;
+          text-transform: uppercase;
+          color: var(--aic-accent);
+        }
         .aic-project-title {
           font-family: var(--font-playfair), Georgia, serif;
           font-weight: 700;
           font-size: clamp(1.25rem, 2.4vw, 1.5rem);
           line-height: 1.3;
           color: var(--text);
-          margin-top: 8px;
+          margin-top: 4px;
         }
         .aic-project-link {
-          display: inline-block;
-          margin-top: 16px;
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
           font-family: var(--font-jetbrains), ui-monospace, monospace;
           font-size: 12px;
+          font-weight: 600;
           letter-spacing: 1px;
-          color: var(--aic-accent);
+          color: var(--bg);
+          background: var(--aic-accent);
           border: 1px solid var(--aic-accent);
           border-radius: 3px;
-          padding: 10px 16px;
+          padding: 12px 18px;
           text-decoration: none;
           transition: background 0.2s ease, color 0.2s ease;
         }
         .aic-project-link:hover {
-          background: var(--aic-accent);
-          color: var(--bg);
+          background: transparent;
+          color: var(--aic-accent);
         }
+        .aic-project-arrow {
+          display: inline-block;
+          transition: transform 0.2s ease;
+        }
+        .aic-project-link:hover .aic-project-arrow { transform: translateX(4px); }
 
         /* ── Toolchain loop ── */
         .aic-section--toolchain { background: var(--surface); }
@@ -543,6 +581,9 @@ export default async function CoursePage(props: PageProps<"/ai/[course]">) {
             An iterative loop. Select a stage, or step through it.
           </p>
           <Toolchain stages={course.toolchain.stages} />
+          {course.project && (
+            <ProjectCallout project={course.project} headingLevel="h3" />
+          )}
         </section>
       )}
 
@@ -581,27 +622,10 @@ export default async function CoursePage(props: PageProps<"/ai/[course]">) {
         </section>
       )}
 
-      {course.project && (
-        <section
-          className="aic-section aic-section--exercise aic-project"
-          aria-labelledby="project-heading"
-        >
-          <p className="aic-label">Project</p>
-          <h2 id="project-heading" className="aic-project-title">
-            {course.project.title}
-          </h2>
-          <a
-            href={course.project.href}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="aic-project-link"
-          >
-            {course.project.linkText} <span aria-hidden="true">→</span>
-            <span className="sr-only">
-              {" "}
-              {course.project.title} (opens in a new tab)
-            </span>
-          </a>
+      {/* Shown inside the toolchain when there is one, otherwise on its own */}
+      {course.project && !course.toolchain && (
+        <section className="aic-section" aria-labelledby="project-heading">
+          <ProjectCallout project={course.project} headingLevel="h2" />
         </section>
       )}
 
@@ -689,6 +713,34 @@ export default async function CoursePage(props: PageProps<"/ai/[course]">) {
 }
 
 const pad = (n: number) => String(n).padStart(2, "0");
+
+function ProjectCallout({
+  project,
+  headingLevel: Heading,
+}: {
+  project: CourseProject;
+  headingLevel: "h2" | "h3";
+}) {
+  return (
+    <div className="aic-project">
+      <div>
+        <p className="aic-project-label">Project</p>
+        <Heading id="project-heading" className="aic-project-title">
+          {project.title}
+        </Heading>
+      </div>
+      <a
+        href={project.href}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="aic-project-link"
+      >
+        {project.linkText} <span aria-hidden="true" className="aic-project-arrow">→</span>
+        <span className="sr-only"> {project.title} (opens in a new tab)</span>
+      </a>
+    </div>
+  );
+}
 
 function NumberedSection({
   section,
