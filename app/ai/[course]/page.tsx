@@ -115,12 +115,44 @@ export default async function CoursePage(props: PageProps<"/ai/[course]">) {
           color: var(--text);
         }
         .aic-list li::marker { color: var(--aic-accent); }
+        .aic-sublabel {
+          font-family: var(--font-jetbrains), ui-monospace, monospace;
+          font-size: 10px;
+          font-weight: 400;
+          letter-spacing: 2px;
+          text-transform: uppercase;
+          color: var(--subtle);
+          margin-top: 28px;
+        }
+        .aic-label + .aic-sublabel { margin-top: 20px; }
+        .aic-sublabel + .aic-text { margin-top: 8px; }
+        .aic-setup {
+          display: flex;
+          flex-wrap: wrap;
+          align-items: baseline;
+          gap: 6px 14px;
+          margin-top: 24px;
+          padding: 12px 14px;
+          background: var(--panel);
+          border-left: 2px solid var(--aic-accent);
+          border-radius: 0 4px 4px 0;
+          font-family: var(--font-jetbrains), ui-monospace, monospace;
+          font-size: 12px;
+          line-height: 1.6;
+          color: var(--text);
+        }
+        .aic-setup-label {
+          font-size: 10px;
+          letter-spacing: 2px;
+          text-transform: uppercase;
+          color: var(--aic-accent);
+        }
         .aic-links {
           list-style: none;
           display: grid;
           grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
           gap: 10px;
-          margin-top: 20px;
+          margin-top: 12px;
         }
         .aic-link {
           display: flex;
@@ -203,7 +235,40 @@ export default async function CoursePage(props: PageProps<"/ai/[course]">) {
           <h2 id="exercise-heading" className="aic-label">
             {course.exercise.label}
           </h2>
-          <p className="aic-text">{course.exercise.summary}</p>
+
+          <h3 className="aic-sublabel">Purpose</h3>
+          {course.exercise.purpose.map((para) => (
+            <p key={para} className="aic-text">
+              {para}
+            </p>
+          ))}
+
+          {course.exercise.learned?.length ? (
+            <>
+              <h3 className="aic-sublabel">What I learned</h3>
+              <ul className="aic-list">
+                {course.exercise.learned.map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
+            </>
+          ) : null}
+
+          {course.exercise.setup && (
+            <p className="aic-setup">
+              <span className="aic-setup-label">Local setup</span>
+              <span>{course.exercise.setup}</span>
+            </p>
+          )}
+
+          {course.exercise.implementation && (
+            <>
+              <h3 className="aic-sublabel">What the R script did</h3>
+              <p className="aic-text">{course.exercise.implementation}</p>
+            </>
+          )}
+
+          <h3 className="aic-sublabel">Exercise links</h3>
           <ExternalLinks links={course.exercise.links} />
         </section>
       )}

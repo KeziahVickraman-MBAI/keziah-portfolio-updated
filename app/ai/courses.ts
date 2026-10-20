@@ -15,7 +15,11 @@ export interface CourseLink {
 
 export interface CourseExercise {
   label: string;
-  summary: string;
+  purpose: string[]; // paragraphs
+  learned?: string[];
+  setup?: string;
+  // What the code actually demonstrates, kept separate from the intent above
+  implementation?: string;
   links: CourseLink[];
 }
 
@@ -82,7 +86,20 @@ export const COURSE_GROUPS: CourseGroup[] = [
         ],
         exercise: {
           label: "Hands-on exercise · RAG guessing game",
-          summary: "Built a system for a guessing-game exercise using RAG and agents.",
+          purpose: [
+            "This exercise explored how to turn a business model canvas into knowledge that an AI agent could retrieve and use in a guessing game. My input was a CSV exported from a business model canvas built in Miro.",
+            "The goal was to prepare that canvas for retrieval, so that its information and the relationships within it would be useful to the system.",
+          ],
+          learned: [
+            "Garbage in, garbage out: the quality of the source information, and how it is organised, directly affects how useful the system’s responses are.",
+            "Knowledge preparation is a core part of RAG. Exporting the canvas was only the starting point; its content needed to keep its meaningful context.",
+            "The focus was on building a knowledge graph: identifying concepts and their relationships so the business model could be represented coherently.",
+            "Used an R script as part of the workflow, and ran a local language model on my own device through Ollama.",
+            "Connected the knowledge-preparation work to a guessing-game exercise using agents.",
+          ],
+          setup: "R + a local language model running through Ollama (llama3.2:3b)",
+          implementation:
+            "In the R script, the Miro CSV was reorganised into a structured canvas grouped by the nine business model canvas sections, and the local model answered questions using only that canvas. The knowledge graph was the conceptual focus of the exercise; the script itself works from the structured canvas rather than a graph.",
           links: [
             {
               label: "Africa Agriculture",
