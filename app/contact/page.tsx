@@ -22,7 +22,7 @@ export default function ContactPage() {
     },
     {
       label: "Location",
-      value: "Singapore",
+      value: "Singapore · Singapore Citizen",
       href: null,
     },
   ];
@@ -93,6 +93,7 @@ export default function ContactPage() {
           display: flex;
           align-items: center;
           justify-content: space-between;
+          gap: 16px;
           background: var(--panel);
           padding: 20px;
           border-radius: 6px;
@@ -113,6 +114,12 @@ export default function ContactPage() {
           font-family: var(--font-jetbrains), ui-monospace, monospace;
           font-size: 14px;
           color: var(--accent);
+          text-align: right;
+          overflow-wrap: break-word;
+        }
+        @media (max-width: 480px) {
+          .contact-row { padding: 16px; }
+          .contact-value { font-size: 13px; }
         }
         .contact-link {
           text-decoration: none;
