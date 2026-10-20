@@ -3,10 +3,10 @@ import { GithubMenu } from "@/components/GithubMenu";
 import { ThemeToggle } from "@/components/ThemeToggle";
 
 const NAV_LINKS = [
-  { label: "Projects", href: "/projects" },
+  { label: "AI", href: "/ai" },
   { label: "R", href: "/r" },
   { label: "Python", href: "/python" },
-  { label: "AI", href: "/ai" },
+  { label: "Projects", href: "/projects" },
   { label: "Graveyard", href: "/grave" },
   { label: "Contact", href: "/contact" },
 ] as const;
