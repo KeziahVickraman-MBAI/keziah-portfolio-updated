@@ -52,6 +52,17 @@ function CoursePanel({ group }: { group: CourseGroup }) {
       <h2 id={headingId} className="ai-panel-title">
         {group.title}
       </h2>
+      {group.period && (
+        <p className="ai-panel-period">
+          {group.period.dates}
+          {group.period.status && (
+            <>
+              <span className="sr-only"> · </span>
+              <span className="ai-panel-status">{group.period.status}</span>
+            </>
+          )}
+        </p>
+      )}
       <ul className="ai-card-grid">
         {group.courses.map((course) => (
           <CourseCard key={course.id} course={course} />
@@ -130,6 +141,27 @@ export default function AIPage() {
           line-height: 1.2;
           color: var(--text);
           margin-bottom: 28px;
+        }
+        .ai-panel-title:has(+ .ai-panel-period) { margin-bottom: 10px; }
+        .ai-panel-period {
+          display: flex;
+          flex-wrap: wrap;
+          align-items: center;
+          gap: 8px 12px;
+          font-family: var(--font-jetbrains), ui-monospace, monospace;
+          font-size: 12px;
+          letter-spacing: 0.5px;
+          color: var(--ai-soft);
+          margin-bottom: 28px;
+        }
+        .ai-panel-status {
+          font-size: 10px;
+          letter-spacing: 1.5px;
+          text-transform: uppercase;
+          color: var(--ai-panel-accent);
+          border: 1px solid var(--ai-panel-accent);
+          border-radius: 999px;
+          padding: 2px 10px;
         }
         .ai-card-grid {
           list-style: none;

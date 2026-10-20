@@ -78,6 +78,7 @@ export interface CourseGroup {
   label: string;
   title: string;
   accent: "gold" | "teal";
+  period?: { dates: string; status?: string };
   courses: Course[];
 }
 
@@ -224,6 +225,7 @@ export const COURSE_GROUPS: CourseGroup[] = [
     label: "Master of Science in Business AI",
     title: "SMU MBAI",
     accent: "teal",
+    period: { dates: "Aug 2026 onwards", status: "Currently in progress" },
     courses: [
       {
         id: "human-ai-collaboration",
