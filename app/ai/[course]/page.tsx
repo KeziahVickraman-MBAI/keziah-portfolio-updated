@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getCourse, getCoursesWithContent, type CourseSection } from "../courses";
+import { Toolchain } from "./Toolchain";
 
 // Only courses with portfolio content get a page; anything else is a 404.
 export const dynamicParams = false;
@@ -293,6 +294,201 @@ export default async function CoursePage(props: PageProps<"/ai/[course]">) {
           outline-offset: 3px;
           border-radius: 2px;
         }
+        .aic-hint {
+          font-family: var(--font-jetbrains), ui-monospace, monospace;
+          font-size: 11px;
+          letter-spacing: 0.5px;
+          color: var(--subtle);
+          margin-top: 8px;
+        }
+        .aic-reflection {
+          font-family: var(--font-playfair), Georgia, serif;
+          font-style: italic;
+          font-size: 17px;
+          line-height: 1.7;
+          color: var(--text);
+          margin-top: 14px;
+        }
+        .aic-project-title {
+          font-family: var(--font-playfair), Georgia, serif;
+          font-weight: 700;
+          font-size: clamp(1.25rem, 2.4vw, 1.5rem);
+          line-height: 1.3;
+          color: var(--text);
+          margin-top: 8px;
+        }
+        .aic-project-link {
+          display: inline-block;
+          margin-top: 16px;
+          font-family: var(--font-jetbrains), ui-monospace, monospace;
+          font-size: 12px;
+          letter-spacing: 1px;
+          color: var(--aic-accent);
+          border: 1px solid var(--aic-accent);
+          border-radius: 3px;
+          padding: 10px 16px;
+          text-decoration: none;
+          transition: background 0.2s ease, color 0.2s ease;
+        }
+        .aic-project-link:hover {
+          background: var(--aic-accent);
+          color: var(--bg);
+        }
+
+        /* ── Toolchain loop ── */
+        .aic-section--toolchain { background: var(--surface); }
+        .tc { margin-top: 20px; }
+        .tc-loop {
+          list-style: none;
+          display: grid;
+          grid-template-columns: repeat(5, minmax(0, 1fr));
+          gap: 22px;
+        }
+        .tc-stage {
+          position: relative;
+          display: flex;
+          flex-direction: column;
+          background: var(--panel);
+          border: 1px solid var(--border);
+          border-top: 2px solid var(--border);
+          border-radius: 4px;
+          transition: border-color 0.2s ease, background 0.2s ease;
+        }
+        .tc-stage--active {
+          border-color: var(--aic-accent);
+          background: var(--raised);
+        }
+        /* arrow to the next stage */
+        .tc-stage:not(:last-child)::after {
+          content: "→" / "";
+          position: absolute;
+          right: -17px;
+          top: 50%;
+          transform: translateY(-50%);
+          font-size: 13px;
+          color: var(--subtle);
+        }
+        .tc-btn {
+          display: flex;
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 2px;
+          width: 100%;
+          text-align: left;
+          background: none;
+          border: none;
+          padding: 14px 14px 6px;
+          color: inherit;
+          font: inherit;
+          cursor: inherit;
+          border-radius: 4px 4px 0 0;
+        }
+        .tc-num {
+          font-family: var(--font-jetbrains), ui-monospace, monospace;
+          font-size: 10px;
+          letter-spacing: 1px;
+          color: var(--aic-accent);
+        }
+        .tc-name {
+          font-family: var(--font-playfair), Georgia, serif;
+          font-weight: 700;
+          font-size: 1.15rem;
+          line-height: 1.25;
+          color: var(--text);
+        }
+        .tc-tool {
+          font-family: var(--font-jetbrains), ui-monospace, monospace;
+          font-size: 11px;
+          letter-spacing: 0.5px;
+          color: var(--aic-accent);
+        }
+        .tc-desc {
+          padding: 4px 14px 14px;
+          font-size: 12px;
+          line-height: 1.6;
+          color: var(--subtle);
+        }
+        .tc-stage--active .tc-desc { color: var(--text); }
+        .tc-btn:hover .tc-name { color: var(--aic-accent); }
+        .tc-btn:focus-visible,
+        .tc-step:focus-visible,
+        .aic-project-link:focus-visible {
+          outline: 2px solid var(--aic-accent);
+          outline-offset: 3px;
+        }
+        /* U-shaped connector from the last stage back to the first */
+        .tc-return {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          margin: 0 10%;
+        }
+        .tc-return-line {
+          align-self: stretch;
+          height: 18px;
+          border: 1px dashed var(--aic-accent);
+          border-top: none;
+          border-radius: 0 0 8px 8px;
+        }
+        .tc-return-label {
+          margin-top: 8px;
+          font-family: var(--font-jetbrains), ui-monospace, monospace;
+          font-size: 11px;
+          letter-spacing: 0.5px;
+          color: var(--aic-accent);
+        }
+        .tc-controls {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 12px;
+          margin-top: 20px;
+          padding-top: 16px;
+          border-top: 1px solid var(--border);
+        }
+        .tc-status {
+          flex: 1;
+          text-align: center;
+          font-family: var(--font-jetbrains), ui-monospace, monospace;
+          font-size: 11px;
+          line-height: 1.6;
+          color: var(--subtle);
+        }
+        .tc-step {
+          flex-shrink: 0;
+          font-family: var(--font-jetbrains), ui-monospace, monospace;
+          font-size: 10px;
+          letter-spacing: 1.5px;
+          text-transform: uppercase;
+          color: var(--aic-accent);
+          background: none;
+          border: 1px solid var(--aic-accent);
+          border-radius: 3px;
+          padding: 8px 12px;
+          cursor: inherit;
+          transition: background 0.2s ease, color 0.2s ease;
+        }
+        .tc-step:hover {
+          background: var(--aic-accent);
+          color: var(--bg);
+        }
+        @media (max-width: 900px) {
+          .tc-loop { grid-template-columns: 1fr; gap: 26px; }
+          .tc-stage:not(:last-child)::after {
+            content: "↓" / "";
+            right: auto;
+            left: 50%;
+            top: auto;
+            bottom: -22px;
+            transform: translateX(-50%);
+          }
+          .tc-return-line { display: none; }
+          .tc-return { margin: 14px 0 0; }
+          .tc-controls { flex-wrap: wrap; }
+          .tc-status { order: -1; flex-basis: 100%; }
+          .tc-step { flex: 1; }
+        }
+
         @media (max-width: 640px) {
           .aic-page { padding: 104px 16px 64px; }
           .aic-section { padding: 22px 18px; }
@@ -335,6 +531,21 @@ export default async function CoursePage(props: PageProps<"/ai/[course]">) {
         </>
       ) : null}
 
+      {course.toolchain && (
+        <section
+          className="aic-section aic-section--toolchain"
+          aria-labelledby="toolchain-heading"
+        >
+          <h2 id="toolchain-heading" className="aic-label">
+            {course.toolchain.label}
+          </h2>
+          <p className="aic-hint">
+            An iterative loop. Select a stage, or step through it.
+          </p>
+          <Toolchain stages={course.toolchain.stages} />
+        </section>
+      )}
+
       {course.learned?.length ? (
         <section className="aic-section" aria-labelledby="learned-heading">
           <h2 id="learned-heading" className="aic-label">
@@ -360,6 +571,39 @@ export default async function CoursePage(props: PageProps<"/ai/[course]">) {
           </ul>
         </section>
       ) : null}
+
+      {course.reflection && (
+        <section className="aic-section" aria-labelledby="reflection-heading">
+          <h2 id="reflection-heading" className="aic-label">
+            {course.reflection.label}
+          </h2>
+          <p className="aic-reflection">{course.reflection.text}</p>
+        </section>
+      )}
+
+      {course.project && (
+        <section
+          className="aic-section aic-section--exercise aic-project"
+          aria-labelledby="project-heading"
+        >
+          <p className="aic-label">Project</p>
+          <h2 id="project-heading" className="aic-project-title">
+            {course.project.title}
+          </h2>
+          <a
+            href={course.project.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="aic-project-link"
+          >
+            {course.project.linkText} <span aria-hidden="true">→</span>
+            <span className="sr-only">
+              {" "}
+              {course.project.title} (opens in a new tab)
+            </span>
+          </a>
+        </section>
+      )}
 
       {course.exercise && (
         <section

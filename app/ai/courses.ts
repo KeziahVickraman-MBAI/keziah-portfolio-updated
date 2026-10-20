@@ -35,12 +35,38 @@ export interface CourseSection {
   continuesIn?: { text: string; sectionId: string };
 }
 
+// An iterative workflow shown as a loop: the last stage leads back to the first.
+export interface ToolchainStage {
+  stage: string;
+  tool: string;
+  description: string;
+}
+
+export interface CourseToolchain {
+  label: string;
+  stages: ToolchainStage[];
+}
+
+export interface CourseReflection {
+  label: string;
+  text: string;
+}
+
+export interface CourseProject {
+  title: string;
+  href: string;
+  linkText: string;
+}
+
 export interface Course {
   id: string;
   title: string;
   overview?: string;
+  toolchain?: CourseToolchain;
   built?: string[];
   learned?: string[];
+  reflection?: CourseReflection;
+  project?: CourseProject;
   exercise?: CourseExercise;
   sections?: CourseSection[];
   screenshots?: CourseScreenshot[];
@@ -62,6 +88,9 @@ export function hasPortfolioContent(course: Course): boolean {
       course.learned?.length ||
       course.exercise ||
       course.sections?.length ||
+      course.toolchain ||
+      course.reflection ||
+      course.project ||
       course.screenshots?.length ||
       course.links?.length
   );
@@ -136,6 +165,53 @@ export const COURSE_GROUPS: CourseGroup[] = [
       {
         id: "vibe-coding",
         title: "Vibe Coding for Business Professionals",
+        overview:
+          "This course helped me quickly learn how to take an idea through a complete product-building workflow. My journey started with Firebase Studio and expanded as I learned more through my Teaching Assistant role using Google AI Studio.",
+        toolchain: {
+          label: "The toolchain · From idea to live product",
+          stages: [
+            {
+              stage: "Ideate",
+              tool: "Miro",
+              description: "Map the problem and organize the initial idea.",
+            },
+            {
+              stage: "See",
+              tool: "Google Stitch",
+              description: "Turn the idea into an interface concept.",
+            },
+            {
+              stage: "Build",
+              tool: "Google AI Studio",
+              description: "Develop the application.",
+            },
+            {
+              stage: "Store",
+              tool: "GitHub",
+              description: "Keep the codebase under version control.",
+            },
+            {
+              stage: "Host",
+              tool: "Vercel",
+              description: "Deploy the application and make it accessible online.",
+            },
+          ],
+        },
+        learned: [
+          "Learned how to move through an end-to-end toolchain, from an initial idea to a deployed application.",
+          "Started experimenting with Firebase Studio, then deepened my experience with Google AI Studio through my work as a Teaching Assistant.",
+          "Learned that individual tools will keep changing. Understanding the stages of the workflow and how they connect is the more transferable skill.",
+          "Recognized that building quickly is only part of the challenge. Choosing what to build and understanding why it should exist require just as much thought.",
+        ],
+        reflection: {
+          label: "Beyond building · What and why",
+          text: "As AI makes it easier for more people to build software, the harder question becomes what is worth building. Does it solve a meaningful problem? Who would use it, and why would they choose it? Would someone pay for the value it provides? For me, this shifted the focus from simply making something work to thinking about usefulness, differentiation, and commercial potential.",
+        },
+        project: {
+          title: "ASL Translator App",
+          href: "https://asl-translator-app.vercel.app/",
+          linkText: "Explore the App",
+        },
       },
       {
         id: "autonomous-agents",
