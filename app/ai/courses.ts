@@ -49,6 +49,19 @@ export function hasPortfolioContent(course: Course): boolean {
   );
 }
 
+// Courses with content get their own page at /ai/<id>.
+export function getCourse(id: string) {
+  for (const group of COURSE_GROUPS) {
+    const course = group.courses.find((c) => c.id === id);
+    if (course) return { course, group };
+  }
+  return null;
+}
+
+export function getCoursesWithContent(): Course[] {
+  return COURSE_GROUPS.flatMap((g) => g.courses).filter(hasPortfolioContent);
+}
+
 // ── Course data ────────────────────────────────────────────────────────────
 
 export const COURSE_GROUPS: CourseGroup[] = [
