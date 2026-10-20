@@ -115,41 +115,46 @@ export default async function CoursePage(props: PageProps<"/ai/[course]">) {
           color: var(--text);
         }
         .aic-list li::marker { color: var(--aic-accent); }
+        .aic-collapse { margin-top: 20px; }
         .aic-summary {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          gap: 16px;
-          list-style: none;
-          cursor: inherit;
-        }
-        .aic-summary::-webkit-details-marker { display: none; }
-        .aic-summary:focus-visible {
-          outline: 2px solid var(--aic-accent);
-          outline-offset: 6px;
-          border-radius: 2px;
-        }
-        .aic-toggle {
           display: inline-flex;
           align-items: center;
-          gap: 8px;
-          flex-shrink: 0;
+          gap: 6px;
+          list-style: none;
+          cursor: inherit;
           font-family: var(--font-jetbrains), ui-monospace, monospace;
           font-size: 10px;
           letter-spacing: 2px;
           text-transform: uppercase;
           color: var(--subtle);
-          transition: color 0.2s ease;
+          border: 1px solid var(--border);
+          border-radius: 3px;
+          padding: 8px 14px;
+          transition: color 0.2s ease, border-color 0.2s ease;
         }
-        .aic-summary:hover .aic-toggle { color: var(--aic-accent); }
+        .aic-summary::-webkit-details-marker { display: none; }
+        .aic-summary:hover {
+          color: var(--aic-accent);
+          border-color: var(--aic-accent);
+        }
+        .aic-summary:focus-visible {
+          outline: 2px solid var(--aic-accent);
+          outline-offset: 3px;
+        }
         .aic-toggle-text::before { content: "Show"; }
         .aic-collapse[open] .aic-toggle-text::before { content: "Hide"; }
         .aic-chevron {
           display: inline-block;
           font-size: 12px;
+          margin-left: 4px;
           transition: transform 0.2s ease;
         }
         .aic-collapse[open] .aic-chevron { transform: rotate(180deg); }
+        .aic-writeup {
+          margin-top: 20px;
+          padding-top: 4px;
+          border-top: 1px solid var(--border);
+        }
         .aic-sublabel {
           font-family: var(--font-jetbrains), ui-monospace, monospace;
           font-size: 10px;
@@ -159,7 +164,6 @@ export default async function CoursePage(props: PageProps<"/ai/[course]">) {
           color: var(--subtle);
           margin-top: 28px;
         }
-        .aic-label + .aic-sublabel { margin-top: 20px; }
         .aic-sublabel + .aic-text { margin-top: 8px; }
         .aic-setup {
           display: flex;
@@ -187,7 +191,7 @@ export default async function CoursePage(props: PageProps<"/ai/[course]">) {
           display: grid;
           grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
           gap: 10px;
-          margin-top: 12px;
+          margin-top: 16px;
         }
         .aic-link {
           display: flex;
@@ -267,51 +271,53 @@ export default async function CoursePage(props: PageProps<"/ai/[course]">) {
           className="aic-section aic-section--exercise"
           aria-labelledby="exercise-heading"
         >
-          <details className="aic-collapse">
-          <summary className="aic-summary">
-            <h2 id="exercise-heading" className="aic-label">
-              {course.exercise.label}
-            </h2>
-            <span className="aic-toggle" aria-hidden="true">
-              <span className="aic-toggle-text" />
-              <span className="aic-chevron">▾</span>
-            </span>
-          </summary>
-
-          <h3 className="aic-sublabel">Purpose</h3>
-          {course.exercise.purpose.map((para) => (
-            <p key={para} className="aic-text">
-              {para}
-            </p>
-          ))}
-
-          {course.exercise.learned?.length ? (
-            <>
-              <h3 className="aic-sublabel">What I learned</h3>
-              <ul className="aic-list">
-                {course.exercise.learned.map((item) => (
-                  <li key={item}>{item}</li>
-                ))}
-              </ul>
-            </>
-          ) : null}
-
-          {course.exercise.setup && (
-            <p className="aic-setup">
-              <span className="aic-setup-label">Local setup</span>
-              <span>{course.exercise.setup}</span>
-            </p>
-          )}
-
-          {course.exercise.implementation && (
-            <>
-              <h3 className="aic-sublabel">What the R script did</h3>
-              <p className="aic-text">{course.exercise.implementation}</p>
-            </>
-          )}
-
-          <h3 className="aic-sublabel">Exercise links</h3>
+          <h2 id="exercise-heading" className="aic-label">
+            {course.exercise.label}
+          </h2>
           <ExternalLinks links={course.exercise.links} />
+
+          <details className="aic-collapse">
+            <summary className="aic-summary">
+              <span className="aic-toggle-text" aria-hidden="true" />
+              <span>write-up</span>
+              <span className="aic-chevron" aria-hidden="true">
+                ▾
+              </span>
+            </summary>
+
+            <div className="aic-writeup">
+              <h3 className="aic-sublabel">Purpose</h3>
+              {course.exercise.purpose.map((para) => (
+                <p key={para} className="aic-text">
+                  {para}
+                </p>
+              ))}
+
+              {course.exercise.learned?.length ? (
+                <>
+                  <h3 className="aic-sublabel">What I learned</h3>
+                  <ul className="aic-list">
+                    {course.exercise.learned.map((item) => (
+                      <li key={item}>{item}</li>
+                    ))}
+                  </ul>
+                </>
+              ) : null}
+
+              {course.exercise.setup && (
+                <p className="aic-setup">
+                  <span className="aic-setup-label">Local setup</span>
+                  <span>{course.exercise.setup}</span>
+                </p>
+              )}
+
+              {course.exercise.implementation && (
+                <>
+                  <h3 className="aic-sublabel">What the R script did</h3>
+                  <p className="aic-text">{course.exercise.implementation}</p>
+                </>
+              )}
+            </div>
           </details>
         </section>
       )}
