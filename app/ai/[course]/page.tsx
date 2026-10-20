@@ -115,6 +115,41 @@ export default async function CoursePage(props: PageProps<"/ai/[course]">) {
           color: var(--text);
         }
         .aic-list li::marker { color: var(--aic-accent); }
+        .aic-summary {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          gap: 16px;
+          list-style: none;
+          cursor: inherit;
+        }
+        .aic-summary::-webkit-details-marker { display: none; }
+        .aic-summary:focus-visible {
+          outline: 2px solid var(--aic-accent);
+          outline-offset: 6px;
+          border-radius: 2px;
+        }
+        .aic-toggle {
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          flex-shrink: 0;
+          font-family: var(--font-jetbrains), ui-monospace, monospace;
+          font-size: 10px;
+          letter-spacing: 2px;
+          text-transform: uppercase;
+          color: var(--subtle);
+          transition: color 0.2s ease;
+        }
+        .aic-summary:hover .aic-toggle { color: var(--aic-accent); }
+        .aic-toggle-text::before { content: "Show"; }
+        .aic-collapse[open] .aic-toggle-text::before { content: "Hide"; }
+        .aic-chevron {
+          display: inline-block;
+          font-size: 12px;
+          transition: transform 0.2s ease;
+        }
+        .aic-collapse[open] .aic-chevron { transform: rotate(180deg); }
         .aic-sublabel {
           font-family: var(--font-jetbrains), ui-monospace, monospace;
           font-size: 10px;
@@ -232,9 +267,16 @@ export default async function CoursePage(props: PageProps<"/ai/[course]">) {
           className="aic-section aic-section--exercise"
           aria-labelledby="exercise-heading"
         >
-          <h2 id="exercise-heading" className="aic-label">
-            {course.exercise.label}
-          </h2>
+          <details className="aic-collapse">
+          <summary className="aic-summary">
+            <h2 id="exercise-heading" className="aic-label">
+              {course.exercise.label}
+            </h2>
+            <span className="aic-toggle" aria-hidden="true">
+              <span className="aic-toggle-text" />
+              <span className="aic-chevron">▾</span>
+            </span>
+          </summary>
 
           <h3 className="aic-sublabel">Purpose</h3>
           {course.exercise.purpose.map((para) => (
@@ -270,6 +312,7 @@ export default async function CoursePage(props: PageProps<"/ai/[course]">) {
 
           <h3 className="aic-sublabel">Exercise links</h3>
           <ExternalLinks links={course.exercise.links} />
+          </details>
         </section>
       )}
 
