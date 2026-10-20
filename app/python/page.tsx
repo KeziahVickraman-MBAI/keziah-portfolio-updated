@@ -446,7 +446,7 @@ function ModuleCard({
     <article
       id={module.id}
       style={{
-        background: "#1a1a1a",
+        background: "var(--panel)",
         borderLeft: "3px solid var(--accent)",
         borderRadius: "0 6px 6px 0",
         padding: "36px 40px",
@@ -509,7 +509,7 @@ function ModuleCard({
               fontFamily: "var(--font-jetbrains)",
               fontSize: "13px",
               lineHeight: 1.85,
-              color: "#f0ede6",
+              color: "var(--text)",
               marginBottom: "20px",
             }}
           >
@@ -518,7 +518,7 @@ function ModuleCard({
           {module.insight && (
             <div
               style={{
-                background: "#1f1f1f",
+                background: "var(--raised)",
                 padding: "8px",
                 borderRadius: "6px",
                 marginBottom: "22px",
@@ -541,7 +541,7 @@ function ModuleCard({
                   fontFamily: "var(--font-jetbrains)",
                   fontSize: "13px",
                   lineHeight: 1.85,
-                  color: "#f0ede6",
+                  color: "var(--text)",
                 }}
               >
                 {module.insight}
@@ -573,7 +573,7 @@ function ModuleCard({
                   fontFamily: "var(--font-jetbrains)",
                   fontSize: "13px",
                   lineHeight: 1.85,
-                  color: "#f0ede6",
+                  color: "var(--text)",
                   marginBottom: "14px",
                 }}
               >
@@ -581,7 +581,7 @@ function ModuleCard({
               </p>
               <div
                 style={{
-                  background: "#1f1f1f",
+                  background: "var(--raised)",
                   padding: "8px",
                   borderRadius: "6px",
                 }}
@@ -603,7 +603,7 @@ function ModuleCard({
                     fontFamily: "var(--font-jetbrains)",
                     fontSize: "13px",
                     lineHeight: 1.85,
-                    color: "#f0ede6",
+                    color: "var(--text)",
                   }}
                 >
                   {sub.insight}
@@ -653,7 +653,7 @@ function Interlude() {
     <aside
       id="interlude"
       style={{
-        background: "#1c2020",
+        background: "var(--interlude)",
         borderLeft: "3px solid var(--accent2)",
         borderRadius: "0 6px 6px 0",
         padding: "36px 40px",
@@ -698,7 +698,7 @@ function Interlude() {
             fontFamily: "var(--font-jetbrains)",
             fontSize: "13px",
             lineHeight: 1.85,
-            color: "#f0ede6",
+            color: "var(--text)",
             marginBottom: i < 5 ? "18px" : 0,
           }}
         >
@@ -829,19 +829,19 @@ export default function PythonPage() {
           font-family: var(--font-jetbrains), ui-monospace, monospace;
           font-size: 11px;
           letter-spacing: 1.5px;
-          color: #4ecdc4;
+          color: var(--accent-bright);
           background: transparent;
           padding: 5px 12px;
           border-radius: 3px;
           text-decoration: none;
-          border: 1px solid #4ecdc4;
+          border: 1px solid var(--accent-bright);
           transition: background 0.2s, color 0.2s;
           display: inline-block;
           cursor: none;
         }
         .r-btn-notebook:hover {
-          background: #4ecdc4;
-          color: #0f0f0f;
+          background: var(--accent-bright);
+          color: var(--bg);
         }
         .plot-img-wrapper {
           position: relative;

@@ -86,7 +86,7 @@ export default function M3Page() {
         .m3-plot-wrapper:hover .m3-plot-hint { opacity: 1; }
         .m3-tab-active {
           background: var(--accent);
-          color: #0d0d0d;
+          color: var(--bg);
           border: 1px solid var(--accent);
         }
         .m3-tab-inactive {
@@ -195,7 +195,7 @@ export default function M3Page() {
         {activeTab === "salary" && (
           <section
             style={{
-              background: "#1a1a1a",
+              background: "var(--panel)",
               borderLeft: "3px solid var(--accent)",
               borderRadius: "0 6px 6px 0",
               padding: "36px 40px",
@@ -219,7 +219,7 @@ export default function M3Page() {
                 fontFamily: "var(--font-jetbrains), ui-monospace, monospace",
                 fontSize: "13px",
                 lineHeight: 1.85,
-                color: "#f0ede6",
+                color: "var(--text)",
                 marginBottom: "28px",
               }}
             >
@@ -271,7 +271,7 @@ export default function M3Page() {
                   fontStyle: "italic",
                   fontSize: "14px",
                   lineHeight: 1.75,
-                  color: "#f0ede6",
+                  color: "var(--text)",
                 }}
               >
                 &ldquo;NBA players earn dramatically more per minute than EPL players across every position — but the
@@ -287,7 +287,7 @@ export default function M3Page() {
         {activeTab === "sentiment" && (
           <section
             style={{
-              background: "#1a1a1a",
+              background: "var(--panel)",
               borderLeft: "3px solid var(--accent)",
               borderRadius: "0 6px 6px 0",
               padding: "36px 40px",
@@ -311,7 +311,7 @@ export default function M3Page() {
                 fontFamily: "var(--font-jetbrains), ui-monospace, monospace",
                 fontSize: "13px",
                 lineHeight: 1.85,
-                color: "#f0ede6",
+                color: "var(--text)",
                 marginBottom: "28px",
               }}
             >
@@ -364,7 +364,7 @@ export default function M3Page() {
                   fontStyle: "italic",
                   fontSize: "14px",
                   lineHeight: 1.75,
-                  color: "#f0ede6",
+                  color: "var(--text)",
                 }}
               >
                 &ldquo;DBS received significantly higher volumes of negative emotion-coded reviews than UOB across all

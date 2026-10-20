@@ -11,9 +11,14 @@ export default function ContactPage() {
       href: "https://www.linkedin.com/in/keziah-vickraman-385168204/",
     },
     {
-      label: "GitHub",
+      label: "GitHub · Personal",
       value: "KeziahVickraman",
       href: "https://github.com/KeziahVickraman",
+    },
+    {
+      label: "GitHub · SMU-MBAI",
+      value: "KeziahVickraman-MBAI",
+      href: "https://github.com/KeziahVickraman-MBAI",
     },
     {
       label: "Location",
@@ -88,7 +93,7 @@ export default function ContactPage() {
           display: flex;
           align-items: center;
           justify-content: space-between;
-          background: #1a1a1a;
+          background: var(--panel);
           padding: 20px;
           border-radius: 6px;
           border-left: 3px solid transparent;

@@ -113,7 +113,7 @@ export default function AIPage() {
       <style>{`
         .ai-page {
           --ai-panel-accent: var(--accent);
-          --ai-soft: #9a988f;
+          --ai-soft: var(--subtle);
           min-height: 100vh;
           background: var(--bg);
           max-width: 1200px;

@@ -94,7 +94,7 @@ export default function Home() {
             style={{ animationDelay: "340ms", marginTop: "48px" }}
           >
             <div style={{
-              background: "#2a2a2a",
+              background: "var(--card)",
               padding: "20px",
               borderRadius: "8px",
               borderLeft: "3px solid var(--accent)",
@@ -119,7 +119,7 @@ export default function Home() {
             style={{ animationDelay: "420ms", marginTop: "24px" }}
           >
             <div style={{
-              background: "#2a2a2a",
+              background: "var(--card)",
               padding: "20px",
               borderRadius: "8px",
               borderLeft: "3px solid var(--accent)",

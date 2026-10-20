@@ -11,6 +11,34 @@
   --accent2: #4a9e7a;   /* teal */
   --accent3: #e85d47;   /* red */
   --border: #2a2a2a;
+  --subtle: #9a988f;    /* secondary text with readable contrast */
+  --raised: #1f1f1f;    /* nested boxes inside panels */
+  --card: #2a2a2a;      /* home page cards */
+  --interlude: #1c2020;
+  --accent-bright: #4ecdc4;
+  --nav-bg: rgba(13, 13, 13, 0.95);
+  color-scheme: dark;
+}
+
+/* ─── Light theme ───────────────────────────────────────────────────── */
+/* Accents are darkened so they stay readable on a light background.   */
+:root[data-theme="light"] {
+  --bg: #f6f3ec;
+  --surface: #efebe2;
+  --panel: #e8e3d8;
+  --text: #1a1a17;
+  --muted: #6b6a63;
+  --accent: #8a6a00;
+  --accent2: #2e7656;
+  --accent3: #b8432f;
+  --border: #d8d2c4;
+  --subtle: #5c5a53;
+  --raised: #e1dbcd;
+  --card: #e4ded2;
+  --interlude: #dfe6e2;
+  --accent-bright: #1f7a73;
+  --nav-bg: rgba(246, 243, 236, 0.95);
+  color-scheme: light;
 }
 
 /* ─── Tailwind v4 Theme Mapping ─────────────────────────────────────── */

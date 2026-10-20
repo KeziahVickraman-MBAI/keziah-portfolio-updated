@@ -1,4 +1,6 @@
 import Link from "next/link";
+import { GithubMenu } from "@/components/GithubMenu";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 const NAV_LINKS = [
   { label: "Projects", href: "/projects" },
@@ -23,7 +25,7 @@ export function Nav() {
         alignItems: "center",
         padding: "20px 48px",
         borderBottom: "1px solid var(--border)",
-        background: "rgba(13, 13, 13, 0.95)",
+        background: "var(--nav-bg)",
         backdropFilter: "blur(10px)",
         WebkitBackdropFilter: "blur(10px)",
       }}
@@ -48,6 +50,7 @@ export function Nav() {
         style={{
           display: "flex",
           gap: "24px",
+          alignItems: "center",
           listStyle: "none",
           margin: 0,
           padding: 0,
@@ -61,14 +64,10 @@ export function Nav() {
           </li>
         ))}
         <li>
-          <a
-            href="https://github.com/KeziahVickraman"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="nav-link"
-          >
-            Github
-          </a>
+          <GithubMenu />
+        </li>
+        <li>
+          <ThemeToggle />
         </li>
       </ul>
 
@@ -83,6 +82,57 @@ export function Nav() {
           transition: color 0.2s ease;
         }
         .nav-link:hover {
+          color: var(--accent);
+        }
+        button.nav-link {
+          background: none;
+          border: none;
+          padding: 0;
+          cursor: inherit;
+        }
+        .theme-toggle {
+          border: 1px solid var(--border) !important;
+          border-radius: 3px;
+          padding: 4px 10px !important;
+        }
+        .gh-menu { position: relative; }
+        .gh-list {
+          position: absolute;
+          top: calc(100% + 14px);
+          right: 0;
+          min-width: 260px;
+          list-style: none;
+          background: var(--surface);
+          border: 1px solid var(--border);
+          border-radius: 6px;
+          padding: 6px;
+          box-shadow: 0 12px 32px rgba(0, 0, 0, 0.25);
+        }
+        .gh-item {
+          display: flex;
+          flex-direction: column;
+          gap: 2px;
+          padding: 10px 12px;
+          border-radius: 4px;
+          border-left: 2px solid transparent;
+          text-decoration: none;
+          transition: background 0.2s ease, border-color 0.2s ease;
+        }
+        .gh-item:hover {
+          background: var(--panel);
+          border-left-color: var(--accent2);
+        }
+        .gh-item-label {
+          font-family: var(--font-jetbrains), ui-monospace, monospace;
+          font-size: 10px;
+          letter-spacing: 2px;
+          text-transform: uppercase;
+          color: var(--subtle);
+        }
+        .gh-item-note { text-transform: none; letter-spacing: 0.5px; }
+        .gh-item-handle {
+          font-family: var(--font-jetbrains), ui-monospace, monospace;
+          font-size: 13px;
           color: var(--accent);
         }
       `}</style>

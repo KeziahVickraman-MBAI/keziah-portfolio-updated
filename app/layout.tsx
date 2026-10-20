@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Playfair_Display, JetBrains_Mono } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 import { Cursor } from "@/components/Cursor";
 import { Nav } from "@/components/Nav";
@@ -48,8 +49,14 @@ export default function RootLayout({
     <html
       lang="en"
       className={`${playfair.variable} ${jetbrains.variable}`}
+      data-theme="dark"
+      suppressHydrationWarning
     >
       <body>
+        {/* Apply the saved theme before first paint to avoid a dark→light flash */}
+        <Script id="theme-init" strategy="beforeInteractive">
+          {`try{if(localStorage.getItem("theme")==="light")document.documentElement.dataset.theme="light"}catch(e){}`}
+        </Script>
         <Cursor />
         <Nav />
         {children}

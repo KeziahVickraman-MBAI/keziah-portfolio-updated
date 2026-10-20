@@ -207,7 +207,7 @@ function ModuleCard({
     <article
       id={module.id}
       style={{
-        background: "#1a1a1a",
+        background: "var(--panel)",
         borderLeft: "3px solid var(--accent)",
         borderRadius: "0 6px 6px 0",
         padding: "36px 40px",
@@ -268,7 +268,7 @@ function ModuleCard({
           fontFamily: "var(--font-jetbrains)",
           fontSize: "13px",
           lineHeight: 1.85,
-          color: "#f0ede6",
+          color: "var(--text)",
           marginBottom: "20px",
         }}
       >
@@ -278,7 +278,7 @@ function ModuleCard({
       {/* Key insight */}
       <div
         style={{
-          background: "#1f1f1f",
+          background: "var(--raised)",
           padding: "8px",
           borderRadius: "6px",
           marginBottom: "22px",
@@ -301,7 +301,7 @@ function ModuleCard({
             fontFamily: "var(--font-jetbrains)",
             fontSize: "13px",
             lineHeight: 1.85,
-            color: "#f0ede6",
+            color: "var(--text)",
           }}
         >
           {module.insight}
