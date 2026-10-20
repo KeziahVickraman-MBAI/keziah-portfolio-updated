@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getCourse, getCoursesWithContent } from "../courses";
+import { getCourse, getCoursesWithContent, type CourseSection } from "../courses";
 
 // Only courses with portfolio content get a page; anything else is a 404.
 export const dynamicParams = false;
@@ -224,9 +224,79 @@ export default async function CoursePage(props: PageProps<"/ai/[course]">) {
           gap: 12px;
           margin-top: 32px;
         }
+        .aic-toc {
+          margin-top: 28px;
+          padding: 18px 20px;
+          border: 1px solid var(--border);
+          border-radius: 6px;
+        }
+        .aic-toc ol {
+          list-style: none;
+          display: flex;
+          flex-direction: column;
+          gap: 6px;
+        }
+        .aic-toc a {
+          display: inline-flex;
+          gap: 12px;
+          font-family: var(--font-jetbrains), ui-monospace, monospace;
+          font-size: 12px;
+          line-height: 1.6;
+          color: var(--subtle);
+          text-decoration: none;
+          transition: color 0.2s ease;
+        }
+        .aic-toc a:hover { color: var(--aic-accent); }
+        .aic-num {
+          font-family: var(--font-jetbrains), ui-monospace, monospace;
+          color: var(--aic-accent);
+          flex-shrink: 0;
+        }
+        .aic-numbered { scroll-margin-top: 96px; }
+        .aic-section-title {
+          display: flex;
+          align-items: baseline;
+          gap: 14px;
+          font-family: var(--font-playfair), Georgia, serif;
+          font-weight: 700;
+          font-size: clamp(1.25rem, 2.4vw, 1.5rem);
+          line-height: 1.3;
+          color: var(--text);
+        }
+        .aic-section-title .aic-num {
+          font-size: 12px;
+          font-weight: 400;
+          letter-spacing: 1px;
+        }
+        .aic-context {
+          font-family: var(--font-jetbrains), ui-monospace, monospace;
+          font-size: 11px;
+          letter-spacing: 1.5px;
+          text-transform: uppercase;
+          color: var(--subtle);
+          margin-top: 10px;
+        }
+        .aic-continues {
+          margin-top: 20px;
+          font-size: 13px;
+          line-height: 1.7;
+          color: var(--subtle);
+        }
+        .aic-inline-link {
+          color: var(--aic-accent);
+          text-decoration: underline;
+          text-underline-offset: 3px;
+        }
+        .aic-toc a:focus-visible,
+        .aic-inline-link:focus-visible {
+          outline: 2px solid var(--aic-accent);
+          outline-offset: 3px;
+          border-radius: 2px;
+        }
         @media (max-width: 640px) {
           .aic-page { padding: 104px 16px 64px; }
           .aic-section { padding: 22px 18px; }
+          .aic-toc { padding: 14px 16px; }
         }
       `}</style>
 
@@ -239,6 +309,31 @@ export default async function CoursePage(props: PageProps<"/ai/[course]">) {
         <h1 className="aic-title">{course.title}</h1>
         {course.overview && <p className="aic-overview">{course.overview}</p>}
       </header>
+
+      {course.sections?.length ? (
+        <>
+          <nav className="aic-toc" aria-label="On this page">
+            <ol>
+              {course.sections.map((section, i) => (
+                <li key={section.id}>
+                  <a href={`#${section.id}`}>
+                    <span className="aic-num">{pad(i + 1)}</span>{" "}
+                    {section.title}
+                  </a>
+                </li>
+              ))}
+            </ol>
+          </nav>
+          {course.sections.map((section, i) => (
+            <NumberedSection
+              key={section.id}
+              section={section}
+              number={i + 1}
+              allSections={course.sections!}
+            />
+          ))}
+        </>
+      ) : null}
 
       {course.learned?.length ? (
         <section className="aic-section" aria-labelledby="learned-heading">
@@ -346,6 +441,73 @@ export default async function CoursePage(props: PageProps<"/ai/[course]">) {
         </section>
       ) : null}
     </main>
+  );
+}
+
+const pad = (n: number) => String(n).padStart(2, "0");
+
+function NumberedSection({
+  section,
+  number,
+  allSections,
+}: {
+  section: CourseSection;
+  number: number;
+  allSections: CourseSection[];
+}) {
+  const headingId = `${section.id}-heading`;
+  const nextIndex = section.continuesIn
+    ? allSections.findIndex((s) => s.id === section.continuesIn!.sectionId)
+    : -1;
+
+  return (
+    <section
+      id={section.id}
+      className="aic-section aic-numbered"
+      aria-labelledby={headingId}
+    >
+      <h2 id={headingId} className="aic-section-title">
+        <span className="aic-num">{pad(number)}</span>{" "}
+        {section.title}
+      </h2>
+      {section.context && <p className="aic-context">{section.context}</p>}
+      {section.description && <p className="aic-text">{section.description}</p>}
+
+      {section.contribution && (
+        <p className="aic-setup">
+          <span className="aic-setup-label">My contribution</span>
+          <span>{section.contribution}</span>
+        </p>
+      )}
+
+      {section.learned?.length ? (
+        <>
+          <h3 className="aic-sublabel">What I learned</h3>
+          <ul className="aic-list">
+            {section.learned.map((item) => (
+              <li key={item}>{item}</li>
+            ))}
+          </ul>
+        </>
+      ) : null}
+
+      {section.links?.length ? (
+        <>
+          <h3 className="aic-sublabel">Linked work</h3>
+          <ExternalLinks links={section.links} />
+        </>
+      ) : null}
+
+      {section.continuesIn && nextIndex >= 0 && (
+        <p className="aic-continues">
+          {section.continuesIn.text}{" "}
+          <a href={`#${section.continuesIn.sectionId}`} className="aic-inline-link">
+            section {pad(nextIndex + 1)}: {allSections[nextIndex].title}
+          </a>
+          .
+        </p>
+      )}
+    </section>
   );
 }
 

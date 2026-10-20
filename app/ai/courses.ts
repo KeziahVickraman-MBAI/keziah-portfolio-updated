@@ -23,6 +23,18 @@ export interface CourseExercise {
   links: CourseLink[];
 }
 
+// A numbered section on the course page; `id` doubles as its #anchor.
+export interface CourseSection {
+  id: string;
+  title: string;
+  context?: string;
+  description?: string;
+  contribution?: string; // my own role, shown apart from the learning points
+  learned?: string[];
+  links?: CourseLink[];
+  continuesIn?: { text: string; sectionId: string };
+}
+
 export interface Course {
   id: string;
   title: string;
@@ -30,6 +42,7 @@ export interface Course {
   built?: string[];
   learned?: string[];
   exercise?: CourseExercise;
+  sections?: CourseSection[];
   screenshots?: CourseScreenshot[];
   links?: CourseLink[];
 }
@@ -48,6 +61,7 @@ export function hasPortfolioContent(course: Course): boolean {
       course.built?.length ||
       course.learned?.length ||
       course.exercise ||
+      course.sections?.length ||
       course.screenshots?.length ||
       course.links?.length
   );
@@ -135,7 +149,113 @@ export const COURSE_GROUPS: CourseGroup[] = [
     title: "SMU MBAI",
     accent: "teal",
     courses: [
-      { id: "human-ai-collaboration", title: "Human–AI Collaboration" },
+      {
+        id: "human-ai-collaboration",
+        title: "Human–AI Collaboration",
+        overview:
+          "This course explored how humans and AI can build, critique, and improve products together—from developing full-stack applications to deliberately breaking systems, incorporating human feedback, and building AI agents.",
+        sections: [
+          {
+            id: "end-to-end-products",
+            title: "Building End-to-End Products",
+            learned: [
+              "Explored building products across both the frontend and backend.",
+              "Learned to consider how the user interface and underlying application behavior work together.",
+              "Practised using AI as a collaborator throughout the development process.",
+            ],
+          },
+          {
+            id: "intentional-breakage",
+            title: "Group Discussion · Intentional Breakage and Rebuilding",
+            description:
+              "Learned through intentional breakage and rebuilding: deliberately introducing problems, understanding what went wrong, and working through how to rectify them.",
+            contribution:
+              "I led a group session focused on making the diagnosis and repair process explicit.",
+            learned: [
+              "Used intentional breakage to investigate how systems behave when something goes wrong.",
+              "Practised explaining failures and the steps needed to repair them.",
+              "Led a group learning session around diagnosing and rectifying deliberately introduced problems.",
+            ],
+            links: [
+              {
+                label: "Local Example",
+                href: "https://mgmt6110group2showcase.vercel.app/",
+                kind: "project",
+              },
+              {
+                label: "Global Example",
+                href: "https://mgmt6110ps2resume.vercel.app/",
+                kind: "project",
+              },
+              {
+                label: "Group Session — Explanation Documents",
+                href: "https://group2-explanation-documents.vercel.app/",
+                kind: "project",
+              },
+            ],
+          },
+          {
+            id: "adversarial-collaborators",
+            title: "Humans and AI as Adversarial Collaborators",
+            context: "Problem Sets 03–04",
+            description:
+              "Explored humans and AI as adversarial collaborators—using challenge and critique to question assumptions, identify weaknesses, and improve the work.",
+            learned: [
+              "Treated AI responses as material to interrogate and refine.",
+              "Explored how human judgment and AI-generated critique can inform revision.",
+              "Used disagreement as part of a constructive collaboration process.",
+            ],
+            links: [
+              {
+                label: "Problem Set 03",
+                href: "https://mgmt6110ps3base-git-main-keziah-vickraman-mbai.vercel.app/",
+                kind: "project",
+              },
+            ],
+            continuesIn: {
+              text: "Problem Set 04 continues into the usability and human-feedback work in",
+              sectionId: "usability-heuristics",
+            },
+          },
+          {
+            id: "usability-heuristics",
+            title: "Assessing UI with Usability Heuristics",
+            description:
+              "Used usability heuristics to assess interfaces and identify opportunities for improvement. In Problem Set 04, I incorporated human comments through a Disqus forum into the review and iteration process.",
+            learned: [
+              "Practised evaluating interfaces using usability heuristics.",
+              "Combined structured interface assessment with feedback from people.",
+              "Incorporated human comments through Disqus as part of the iteration process.",
+            ],
+            links: [
+              {
+                label: "Group UI Comparison",
+                href: "https://mgmt6110week05group2comparison.vercel.app/",
+                kind: "project",
+              },
+              {
+                label: "Problem Set 04 — Human Feedback with Disqus",
+                href: "https://mgmt6110ps3base.vercel.app/",
+                kind: "project",
+              },
+            ],
+          },
+          {
+            id: "ai-agents-zapier",
+            title: "Building AI Agents with Zapier",
+            context: "Project: Full Court Press",
+            description:
+              "Applied the course’s human–AI collaboration themes to building AI agents using Zapier.",
+            links: [
+              {
+                label: "Full Court Press — Problem Set 05",
+                href: "https://mgmt6110problemset05zapier.vercel.app/",
+                kind: "project",
+              },
+            ],
+          },
+        ],
+      },
       { id: "accounting-with-ai", title: "Accounting with AI" },
       { id: "operations-and-ai", title: "Operations and AI" },
       { id: "ai-powered-marketing", title: "AI-Powered Marketing" },
