@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import { CursorNote } from "@/components/CursorNote";
 
 const PHOTOS = [
   { src: "/images/travel.jpg",        alt: "Travel"      },
@@ -158,6 +159,11 @@ export default function Home() {
               I build things that think, and I think about things that matter.
             </p>
             </div>
+          </div>
+
+          {/* Why this cursor? */}
+          <div className="animate-fade-up" style={{ animationDelay: "500ms" }}>
+            <CursorNote />
           </div>
         </div>
 
