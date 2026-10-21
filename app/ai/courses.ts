@@ -33,6 +33,18 @@ export interface CourseSection {
   learned?: string[];
   links?: CourseLink[];
   continuesIn?: { text: string; sectionId: string };
+  agents?: AgentCard[];
+}
+
+// A project card for an agent; `details` are only facts confirmed in its repo.
+export interface AgentCard {
+  id: string;
+  title: string;
+  description: string;
+  details?: string[];
+  humanRole?: string; // where my judgment stays in the loop
+  tags: string[];
+  links: CourseLink[];
 }
 
 // An iterative workflow shown as a loop: the last stage leads back to the first.
@@ -329,6 +341,60 @@ export const COURSE_GROUPS: CourseGroup[] = [
                 label: "Full Court Press — Problem Set 05",
                 href: "https://mgmt6110problemset05zapier.vercel.app/",
                 kind: "project",
+              },
+            ],
+          },
+          {
+            id: "agents-i-built",
+            title: "Agents I Built",
+            description:
+              "Two agents I built to take on recurring research and structured evaluation, while I keep the judgment calls: which roles to pursue, and which findings deserve a closer look.",
+            agents: [
+              {
+                id: "ai-job-scouter",
+                title: "AI Job Scouter",
+                description:
+                  "A Claude routine that scouts for new AI and innovation roles in Singapore every morning at 6:07 AM Singapore time. It keeps a persistent record of every role it has seen in data/jobs.json, building a searchable history of opportunities while I sleep.",
+                details: [
+                  "Checks MyCareersFuture and a configurable list of company job boards, and reads my own LinkedIn job-alert emails instead of visiting LinkedIn.",
+                  "Emails me the roles that are new and lists them on a dashboard I can search by title or company.",
+                ],
+                humanRole:
+                  "It matches roles on job titles alone, so I open each post myself and decide whether it suits me.",
+                tags: ["Claude", "Scheduled automation", "Career discovery"],
+                links: [
+                  {
+                    label: "View live project",
+                    href: "https://keziahvickraman-mbai.github.io/ai-job-scout/",
+                    kind: "demo",
+                  },
+                  {
+                    label: "View source",
+                    href: "https://github.com/KeziahVickraman-MBAI/ai-job-scout",
+                    kind: "code",
+                  },
+                ],
+              },
+              {
+                id: "uni-site-auditor",
+                title: "Uni Site Auditor",
+                description:
+                  "An AI agent that audits university websites using usability heuristics to identify potential usability issues and support human review.",
+                details: [
+                  "Runs every Monday at 7:07 AM Singapore time on the home and admissions pages of NUS, NTU and SMU.",
+                  "Rates each site against Nielsen’s ten usability heuristics on a 0–4 severity scale, and a validation step checks that every piece of quoted evidence appears in the raw page data.",
+                  "Records a site that returns a bot-check page as not judged, rather than trying to get past the check.",
+                ],
+                humanRole:
+                  "Its findings are prompts for a human evaluator, not verdicts. It reads HTML only, so visual design and real tasks still need a person.",
+                tags: ["AI agent", "Usability heuristics", "Website auditing"],
+                links: [
+                  {
+                    label: "View source",
+                    href: "https://github.com/KeziahVickraman-MBAI/uni-site-audit",
+                    kind: "code",
+                  },
+                ],
               },
             ],
           },

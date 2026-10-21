@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import {
   getCourse,
   getCoursesWithContent,
+  type AgentCard,
   type CourseProject,
   type CourseSection,
 } from "../courses";
@@ -292,6 +293,62 @@ export default async function CoursePage(props: PageProps<"/ai/[course]">) {
           color: var(--aic-accent);
           text-decoration: underline;
           text-underline-offset: 3px;
+        }
+        /* Agent project cards */
+        .aic-agents {
+          list-style: none;
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+          gap: 16px;
+          margin-top: 24px;
+        }
+        .aic-agent {
+          display: flex;
+          flex-direction: column;
+          height: 100%;
+          padding: 22px;
+          background: var(--surface);
+          border: 1px solid var(--border);
+          border-top: 2px solid var(--aic-accent);
+          border-radius: 6px;
+        }
+        .aic-agent-title {
+          font-family: var(--font-playfair), Georgia, serif;
+          font-weight: 700;
+          font-size: 1.2rem;
+          line-height: 1.3;
+          color: var(--text);
+        }
+        .aic-tags {
+          list-style: none;
+          display: flex;
+          flex-wrap: wrap;
+          gap: 6px;
+          margin-top: 10px;
+        }
+        .aic-tag {
+          font-family: var(--font-jetbrains), ui-monospace, monospace;
+          font-size: 10px;
+          letter-spacing: 1px;
+          text-transform: uppercase;
+          color: var(--aic-accent);
+          border: 1px solid var(--aic-accent);
+          border-radius: 999px;
+          padding: 2px 10px;
+        }
+        .aic-agent .aic-text { font-size: 13px; }
+        .aic-list--compact {
+          gap: 6px;
+          font-size: 13px;
+          line-height: 1.65;
+          margin-top: 10px;
+        }
+        .aic-agent .aic-setup { margin-top: 18px; }
+        /* push links to the bottom so the two cards line up */
+        .aic-agent .aic-links {
+          margin-top: auto;
+          padding-top: 18px;
+          grid-template-columns: 1fr;
         }
         .aic-toc a:focus-visible,
         .aic-inline-link:focus-visible {
@@ -794,6 +851,16 @@ function NumberedSection({
         </>
       ) : null}
 
+      {section.agents?.length ? (
+        <ul className="aic-agents">
+          {section.agents.map((agent) => (
+            <li key={agent.id}>
+              <AgentProjectCard agent={agent} />
+            </li>
+          ))}
+        </ul>
+      ) : null}
+
       {section.continuesIn && nextIndex >= 0 && (
         <p className="aic-continues">
           {section.continuesIn.text}{" "}
@@ -807,7 +874,52 @@ function NumberedSection({
   );
 }
 
-function ExternalLinks({ links }: { links: { label: string; href: string }[] }) {
+function AgentProjectCard({ agent }: { agent: AgentCard }) {
+  const headingId = `${agent.id}-heading`;
+  return (
+    <article className="aic-agent" aria-labelledby={headingId}>
+      <h3 id={headingId} className="aic-agent-title">
+        {agent.title}
+      </h3>
+      <ul className="aic-tags" aria-label="Tags">
+        {agent.tags.map((tag) => (
+          <li key={tag} className="aic-tag">
+            {tag}
+          </li>
+        ))}
+      </ul>
+      <p className="aic-text">{agent.description}</p>
+
+      {agent.details?.length ? (
+        <>
+          <h4 className="aic-sublabel">How it works</h4>
+          <ul className="aic-list aic-list--compact">
+            {agent.details.map((item) => (
+              <li key={item}>{item}</li>
+            ))}
+          </ul>
+        </>
+      ) : null}
+
+      {agent.humanRole && (
+        <p className="aic-setup">
+          <span className="aic-setup-label">Human judgment</span>
+          <span>{agent.humanRole}</span>
+        </p>
+      )}
+
+      <ExternalLinks links={agent.links} context={agent.title} />
+    </article>
+  );
+}
+
+function ExternalLinks({
+  links,
+  context,
+}: {
+  links: { label: string; href: string }[];
+  context?: string; // names the project for screen readers, e.g. two "View source" links
+}) {
   return (
     <ul className="aic-links">
       {links.map((link) => (
@@ -820,7 +932,9 @@ function ExternalLinks({ links }: { links: { label: string; href: string }[] }) 
           >
             <span>{link.label}</span>
             <span aria-hidden="true">↗</span>
-            <span className="sr-only"> (opens in a new tab)</span>
+            <span className="sr-only">
+              {context ? ` for ${context}` : ""} (opens in a new tab)
+            </span>
           </a>
         </li>
       ))}
