@@ -23,7 +23,7 @@ const jetbrains = JetBrains_Mono({
 export const metadata: Metadata = {
   title: "Keziah Vickraman — Quantitative Poet",
   description:
-    "Business Analyst · Teaching Assistant · MBAI Candidate · Handball Goalkeeper. Bridging rigorous mathematics and humanistic inquiry.",
+    "Teaching Assistant · MBAI Candidate · Handball Goalkeeper. Bridging rigorous mathematics and humanistic inquiry.",
   keywords: [
     "Keziah Vickraman",
     "Quantitative Finance",

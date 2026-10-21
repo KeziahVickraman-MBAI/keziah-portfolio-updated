@@ -24,7 +24,7 @@ const CREDENTIALS = [
   { year: "2020–2024", desc: "BBM · SMU · Quantitative Finance + Communications Management" },
   { year: "2025–Present", desc: "Teaching Assistant · SMU Academy & SMU Masters · Python, R, Machine Learning, Causal Inference, CX/UX, Agentic AI" },
   { year: "2025", desc: "Advanced Certifications · Python · R" },
-  { year: "2025-Present", desc: "Business Analyst"},
+  { year: "Sep 2025 – Jul 2026", desc: "Business Analyst"},
   { year: "2026", desc: "Databricks Certified Data Analyst · AI Partner Technical Pool" },
   { year: "Present", desc: "MSc Business AI Candidate · August 2026 Intake" },
 ];
@@ -138,7 +138,7 @@ export default function Home() {
               className="font-display text-warm leading-relaxed"
               style={{ fontSize: "clamp(0.88rem, 1.1vw, 1rem)", marginBottom: "1.2em" }}
             >
-              By day, I&rsquo;m a Business Analyst at Unison Group, where I bridge Finance and IT on regulatory and systems projects, including Basel III reforms implementation. Beyond my core scope, I&rsquo;m independently building and deploying internal AI agents — spanning document parsing, workflow automation, RAG-based chatbots, and email automation — bringing AI adoption into the organisation from the ground up.
+              From Sep 2025 to Jul 2026, I was a Business Analyst at Unison Group, where I bridged Finance and IT on regulatory and systems projects, including Basel III reforms implementation. Beyond my core scope, I independently built and deployed internal AI agents — spanning document parsing, workflow automation, RAG-based chatbots, and email automation — bringing AI adoption into the organisation from the ground up.
             </p>
             <p
               className="font-display text-warm leading-relaxed"
