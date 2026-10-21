@@ -86,6 +86,10 @@ export function CursorNote() {
           color: var(--text);
         }
         .cn-text + .cn-text { margin-top: 1.2em; }
+        .cn-strong {
+          font-weight: 700;
+          color: var(--accent);
+        }
         .cn-text--close {
           font-style: italic;
           color: var(--accent);
@@ -106,8 +110,16 @@ export function CursorNote() {
       <div className="cn-body">
         <h2 className="cn-heading">On target. Ready to adapt.</h2>
         <p className="cn-text">
-          The dot represents my focus; the ring, the environment around it. As
-          I move, they realign—a small expression of how I approach building.
+          Everything here is intentional, including the cursor. It may seem
+          small and subtle, but I believe details like this make all the
+          difference in the world today.
+        </p>
+        <p className="cn-text">
+          The dot represents my focus; the ring, the environment around it.
+          Whatever happens around me, as I move, they realign—a small
+          expression of how I approach building. As Darwin’s theory reminds
+          us, survival has never been about the finest, but the{" "}
+          <strong className="cn-strong">fittest</strong>.
         </p>
         <p className="cn-text">
           I care about how well an AI or ML model fits the setting where it
@@ -115,8 +127,14 @@ export function CursorNote() {
           environment changes and performance declines, I investigate, adapt,
           rebuild, and redeploy.
         </p>
+        <p className="cn-text">
+          I believe in speed and efficiency, but I have the work ethic of an
+          athlete. The right path is not always the shortest one from A to B.
+          Sometimes—especially in learning—it has to be tedious, hard and
+          messy.
+        </p>
         <p className="cn-text cn-text--close">
-          Staying on target means being willing to change.
+          Only then can true learning and transformation be achieved.
         </p>
       </div>
     </details>
