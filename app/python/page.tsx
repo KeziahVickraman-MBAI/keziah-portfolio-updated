@@ -47,7 +47,7 @@ const MODULES: ModuleData[] = [
       { src: "/images/python/dddm_m1_kmeanscluster.png", alt: "K-Means clusters visualised via PCA" },
       { src: "/images/python/dddm_m1_segementation.png", alt: "Customer segmentation profile by cluster" },
     ],
-    codeUrl: "https://github.com/KeziahVickraman/dddm-python/tree/main/module1_assessment",
+    codeUrl: "https://github.com/KeziahVickraman/dddm-python/blob/main/module1_assessment_segmentation_dddm24.ipynb",
   },
   {
     id: "m2",
@@ -71,7 +71,7 @@ const MODULES: ModuleData[] = [
       },
     ],
     plots: [],
-    codeUrl: "https://github.com/KeziahVickraman/dddm-python/tree/main/module2_assessment",
+    codeUrl: "https://github.com/KeziahVickraman/dddm-python/blob/main/module2_assessment_arm_dddm25.ipynb",
   },
   {
     id: "m3",
@@ -87,7 +87,7 @@ const MODULES: ModuleData[] = [
       { src: "/images/python/dddm_m3_sc.png", alt: "Synthetic Control — West Germany GDP counterfactual" },
       { src: "/images/python/dddm_m3_qualitymatching.png", alt: "PSM matching quality diagnostics" },
     ],
-    codeUrl: "https://github.com/KeziahVickraman/dddm-python/tree/main/module3_assessment",
+    codeUrl: "https://github.com/KeziahVickraman/dddm-python/blob/main/module3_assessment_econometrics_dddm25.ipynb",
     notebookUrl: "/notebooks/module3_assessment_econometrics_dddm25.html",
   },
   {
@@ -102,7 +102,7 @@ const MODULES: ModuleData[] = [
     plots: [
       { src: "/images/python/dddm_m4_comparison.png", alt: "Cumulative returns comparison — all strategies vs buy-and-hold" },
     ],
-    codeUrl: "https://github.com/KeziahVickraman/dddm-python/tree/main/module4_assessment",
+    codeUrl: "https://github.com/KeziahVickraman/dddm-python/blob/main/module4_assessment_algotrading_dddm25.ipynb",
     notebookUrl: "/notebooks/module4_assessment_algotrading_dddm25.html",
   },
   {
@@ -119,7 +119,7 @@ const MODULES: ModuleData[] = [
       { src: "/images/python/dddm_m5_war_better_viz.png", alt: "Historical wars data — improved visualisation" },
       { src: "/images/python/dddm_m5_war_viz.png", alt: "Historical wars data — initial visualisation" },
     ],
-    codeUrl: "https://github.com/KeziahVickraman/dddm-python/tree/main/module5_assessment",
+    codeUrl: "https://github.com/KeziahVickraman/dddm-python/blob/main/module5_assessment_nlp_dddm25.ipynb",
     notebookUrl: "/notebooks/module5_assessment_nlp_dddm25.html",
   },
   {
@@ -136,7 +136,7 @@ const MODULES: ModuleData[] = [
       { src: "/images/python/dddm_m6_pairstradingec.png", alt: "Pairs trading backtest — MS vs GS spread" },
       { src: "/images/python/dddm_m6_trumpliberation.png", alt: "DiD — Liberation Day tariff impact on stocks" },
     ],
-    codeUrl: "https://github.com/KeziahVickraman/dddm-python/tree/main/module6_assessment",
+    codeUrl: "https://github.com/KeziahVickraman/dddm-python/blob/main/module6_assessment_llmintegration_dddm25.ipynb",
     notebookUrl: "/notebooks/module6_assessment_llmintegration_dddm25.html",
   },
 ];
