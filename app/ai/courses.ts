@@ -43,7 +43,10 @@ export interface AgentCard {
   description: string;
   details?: string[];
   humanRole?: string; // where my judgment stays in the loop
-  tags: string[];
+  status?: string; // e.g. "In development"
+  builtWith?: string;
+  writeup?: { heading: string; text: string }[];
+  tags?: string[];
   links: CourseLink[];
 }
 
@@ -400,7 +403,52 @@ export const COURSE_GROUPS: CourseGroup[] = [
           },
         ],
       },
-      { id: "accounting-with-ai", title: "Accounting with AI" },
+      {
+        id: "accounting-with-ai",
+        title: "Accounting with AI",
+        sections: [
+          {
+            id: "agents-im-building",
+            title: "Agents I’m Building",
+            agents: [
+              {
+                id: "earnings-watcher-assessor",
+                title: "Earnings Call Watcher and Assessor",
+                status: "In development",
+                builtWith: "Claude Routines",
+                description:
+                  "I’m building two Claude Routines that work together to turn US company earnings releases into a concise, evidence-backed briefing. A watcher extracts headline figures, guidance and management commentary with source quotations; an assessor checks them against SEC filings and quarterly data. The results go to a report dashboard for my review.",
+                writeup: [
+                  {
+                    heading: "Why I’m building it",
+                    text: "Financial reporting tells its story twice: once in the numbers, and again in the narrative management wraps around them. I want to see whether AI can help me read the two together and test one against the other, without losing track of where each claim comes from. This project is my attempt to build that as a recurring workflow, with my own judgment as the final step.",
+                  },
+                  {
+                    heading: "How the two agents are meant to work",
+                    text: "The watcher monitors US company earnings releases filed with the SEC and extracts the headline figures, any guidance, and the key points of management’s commentary, each tied to the exact words it comes from. The assessor then checks that work. It confirms the quotations against the source documents, compares the figures with the company’s quarterly filings, sets the results against the previous quarter and the same quarter a year earlier, and judges whether management’s claims are supported by the numbers. Both feed a report dashboard that I review. The tool is for analysis and review only; it makes no buy or sell recommendations.",
+                  },
+                  {
+                    heading: "What I’m exploring",
+                    text: "What interests me most is the second agent. Can a reviewer that did not do the extraction catch misread figures, unsupported claims or gaps the first agent missed? I’m also learning what it takes to make a recurring AI workflow traceable and reliable: keeping every figure linked to its source, keeping what one agent produced separate from how the other judged it, and making failures visible rather than silent.",
+                  },
+                ],
+                links: [
+                  {
+                    label: "View GitHub Repository",
+                    href: "https://github.com/KeziahVickraman-MBAI/extract-earnings-assessor-1",
+                    kind: "code",
+                  },
+                  {
+                    label: "View Report",
+                    href: "https://keziahvickraman-mbai.github.io/extract-earnings-assessor-1/",
+                    kind: "demo",
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      },
       { id: "operations-and-ai", title: "Operations and AI" },
       { id: "ai-powered-marketing", title: "AI-Powered Marketing" },
     ],

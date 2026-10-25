@@ -337,6 +337,29 @@ export default async function CoursePage(props: PageProps<"/ai/[course]">) {
           padding: 2px 10px;
         }
         .aic-agent .aic-text { font-size: 13px; }
+        .aic-agent-meta {
+          display: flex;
+          flex-wrap: wrap;
+          align-items: center;
+          gap: 6px 12px;
+          margin-top: 10px;
+          font-family: var(--font-jetbrains), ui-monospace, monospace;
+          font-size: 11px;
+          letter-spacing: 0.5px;
+          color: var(--subtle);
+        }
+        .aic-status {
+          font-size: 10px;
+          letter-spacing: 1.5px;
+          text-transform: uppercase;
+          color: var(--aic-accent);
+          border: 1px solid var(--aic-accent);
+          border-radius: 999px;
+          padding: 2px 10px;
+        }
+        /* lone card: keep the write-up at a comfortable line length */
+        .aic-agents > li:only-child .aic-agent > .aic-text,
+        .aic-agents > li:only-child .aic-agent > div > .aic-text { max-width: 68ch; }
         .aic-list--compact {
           gap: 6px;
           font-size: 13px;
@@ -603,18 +626,21 @@ export default async function CoursePage(props: PageProps<"/ai/[course]">) {
 
       {course.sections?.length ? (
         <>
-          <nav className="aic-toc" aria-label="On this page">
-            <ol>
-              {course.sections.map((section, i) => (
-                <li key={section.id}>
-                  <a href={`#${section.id}`}>
-                    <span className="aic-num">{pad(i + 1)}</span>{" "}
-                    {section.title}
-                  </a>
-                </li>
-              ))}
-            </ol>
-          </nav>
+          {/* an index only helps once there is more than one section */}
+          {course.sections.length > 1 && (
+            <nav className="aic-toc" aria-label="On this page">
+              <ol>
+                {course.sections.map((section, i) => (
+                  <li key={section.id}>
+                    <a href={`#${section.id}`}>
+                      <span className="aic-num">{pad(i + 1)}</span>{" "}
+                      {section.title}
+                    </a>
+                  </li>
+                ))}
+              </ol>
+            </nav>
+          )}
           {course.sections.map((section, i) => (
             <NumberedSection
               key={section.id}
@@ -881,14 +907,30 @@ function AgentProjectCard({ agent }: { agent: AgentCard }) {
       <h3 id={headingId} className="aic-agent-title">
         {agent.title}
       </h3>
-      <ul className="aic-tags" aria-label="Tags">
-        {agent.tags.map((tag) => (
-          <li key={tag} className="aic-tag">
-            {tag}
-          </li>
-        ))}
-      </ul>
+      {agent.status || agent.builtWith ? (
+        <p className="aic-agent-meta">
+          {agent.status && <span className="aic-status">{agent.status}</span>}
+          {agent.status && agent.builtWith && <span className="sr-only"> · </span>}
+          {agent.builtWith && <span>Built with {agent.builtWith}</span>}
+        </p>
+      ) : null}
+      {agent.tags?.length ? (
+        <ul className="aic-tags" aria-label="Tags">
+          {agent.tags.map((tag) => (
+            <li key={tag} className="aic-tag">
+              {tag}
+            </li>
+          ))}
+        </ul>
+      ) : null}
       <p className="aic-text">{agent.description}</p>
+
+      {agent.writeup?.map((part) => (
+        <div key={part.heading}>
+          <h4 className="aic-sublabel">{part.heading}</h4>
+          <p className="aic-text">{part.text}</p>
+        </div>
+      ))}
 
       {agent.details?.length ? (
         <>
