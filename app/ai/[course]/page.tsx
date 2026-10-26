@@ -37,6 +37,7 @@ export default async function CoursePage(props: PageProps<"/ai/[course]">) {
   const found = getCourse(id);
   if (!found) notFound();
   const { course, group } = found;
+  const hasToc = (course.sections?.length ?? 0) > 1;
 
   return (
     <main className={`aic-page aic-page--${group.accent}`}>
@@ -45,7 +46,7 @@ export default async function CoursePage(props: PageProps<"/ai/[course]">) {
           --aic-accent: var(--accent);
           min-height: 100vh;
           background: var(--bg);
-          max-width: 900px;
+          max-width: 1240px;
           margin: 0 auto;
           padding: 120px 48px 80px;
         }
@@ -78,6 +79,7 @@ export default async function CoursePage(props: PageProps<"/ai/[course]">) {
           margin-bottom: 16px;
         }
         .aic-overview {
+          max-width: 78ch;
           font-size: 14px;
           line-height: 1.75;
           color: var(--text);
@@ -357,9 +359,16 @@ export default async function CoursePage(props: PageProps<"/ai/[course]">) {
           border-radius: 999px;
           padding: 2px 10px;
         }
-        /* lone card: keep the write-up at a comfortable line length */
-        .aic-agents > li:only-child .aic-agent > .aic-text,
-        .aic-agents > li:only-child .aic-agent > div > .aic-text { max-width: 68ch; }
+        /* lone card: short intro at a readable width, write-up in columns */
+        .aic-agents > li:only-child .aic-agent > .aic-text { max-width: 78ch; }
+        .aic-agents > li:only-child .aic-agent .aic-links {
+          grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        }
+        .aic-agents > li:only-child .aic-writeup-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+          gap: 0 32px;
+        }
         .aic-list--compact {
           gap: 6px;
           font-size: 13px;
@@ -607,10 +616,87 @@ export default async function CoursePage(props: PageProps<"/ai/[course]">) {
           .tc-step { flex: 1; }
         }
 
+
+        /* ── Layout: wider page, side index, side-by-side blocks ── */
+        .aic-body--toc .aic-toc { margin-top: 28px; }
+        .aic-ns-grid--split .aic-setup { margin-top: 18px; }
+        .aic-pair { margin-top: 32px; display: grid; gap: 24px; }
+        .aic-pair:empty { display: none; }
+        .aic-pair > .aic-section { margin-top: 0; }
+        .aic-content > .aic-section:first-child { margin-top: 28px; }
+        @media (min-width: 1000px) {
+          /* a section's description sits beside its learning points */
+          .aic-ns-grid--split {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+            gap: 0 40px;
+            align-items: start;
+          }
+          .aic-ns-grid--split .aic-sublabel:first-child { margin-top: 12px; }
+          /* learned + exercise, learned + reflection: two columns */
+          .aic-pair {
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+            align-items: start;
+          }
+        }
+        @media (min-width: 1100px) {
+          /* sticky side index for long, multi-section pages */
+          .aic-body--toc {
+            display: grid;
+            grid-template-columns: 210px minmax(0, 1fr);
+            gap: 0 40px;
+            align-items: start;
+          }
+          .aic-body--toc .aic-toc {
+            position: sticky;
+            top: 100px;
+            border: none;
+            padding: 0;
+          }
+          .aic-body--toc .aic-toc ol { gap: 12px; }
+          .aic-body--toc .aic-toc a { line-height: 1.45; }
+        }
+
+        /* ── Phone: full-width content. Sections run edge to edge and
+           nested cards drop their side padding, so text uses the screen. ── */
         @media (max-width: 640px) {
-          .aic-page { padding: 104px 16px 64px; }
-          .aic-section { padding: 22px 18px; }
-          .aic-toc { padding: 14px 16px; }
+          .aic-page { padding: 96px 14px 56px; }
+          .aic-title { margin-bottom: 12px; }
+          .aic-section {
+            margin: 20px -14px 0;
+            padding: 20px 14px;
+            border-radius: 0;
+          }
+          .aic-section--exercise {
+            border-left: none;
+            border-right: none;
+          }
+          .aic-pair { margin-top: 20px; gap: 20px; }
+          .aic-content > .aic-section:first-child { margin-top: 20px; }
+          .aic-toc {
+            margin: 20px -14px 0;
+            padding: 14px;
+            border-radius: 0;
+            border-left: none;
+            border-right: none;
+          }
+          .aic-text, .aic-list, .aic-overview { line-height: 1.65; }
+          .aic-list { gap: 8px; padding-left: 16px; }
+          .aic-sublabel { margin-top: 22px; }
+          .aic-setup { padding: 12px; }
+          /* agent cards: no side padding or side borders inside a section */
+          .aic-agents { margin-top: 18px; gap: 0; grid-template-columns: minmax(0, 1fr); }
+          .aic-agent {
+            padding: 18px 0 20px;
+            background: none;
+            border: none;
+            border-top: 2px solid var(--aic-accent);
+            border-radius: 0;
+          }
+          .aic-agent .aic-links { padding-top: 14px; }
+          .aic-links { gap: 8px; }
+          .aic-link { padding: 11px 12px; }
+          .aic-project { padding: 16px 14px; }
         }
       `}</style>
 
@@ -624,24 +710,25 @@ export default async function CoursePage(props: PageProps<"/ai/[course]">) {
         {course.overview && <p className="aic-overview">{course.overview}</p>}
       </header>
 
-      {course.sections?.length ? (
-        <>
-          {/* an index only helps once there is more than one section */}
-          {course.sections.length > 1 && (
-            <nav className="aic-toc" aria-label="On this page">
-              <ol>
-                {course.sections.map((section, i) => (
-                  <li key={section.id}>
-                    <a href={`#${section.id}`}>
-                      <span className="aic-num">{pad(i + 1)}</span>{" "}
-                      {section.title}
-                    </a>
-                  </li>
-                ))}
-              </ol>
-            </nav>
-          )}
-          {course.sections.map((section, i) => (
+      <div className={`aic-body${hasToc ? " aic-body--toc" : ""}`}>
+        {/* an index only helps once there is more than one section */}
+        {hasToc && (
+          <nav className="aic-toc" aria-label="On this page">
+            <ol>
+              {course.sections?.map((section, i) => (
+                <li key={section.id}>
+                  <a href={`#${section.id}`}>
+                    <span className="aic-num">{pad(i + 1)}</span>{" "}
+                    {section.title}
+                  </a>
+                </li>
+              ))}
+            </ol>
+          </nav>
+        )}
+
+        <div className="aic-content">
+          {course.sections?.map((section, i) => (
             <NumberedSection
               key={section.id}
               section={section}
@@ -649,148 +736,151 @@ export default async function CoursePage(props: PageProps<"/ai/[course]">) {
               allSections={course.sections!}
             />
           ))}
-        </>
-      ) : null}
 
-      {course.toolchain && (
-        <section
-          className="aic-section aic-section--toolchain"
-          aria-labelledby="toolchain-heading"
-        >
-          <h2 id="toolchain-heading" className="aic-label">
-            {course.toolchain.label}
-          </h2>
-          <p className="aic-hint">
-            An iterative loop. Select a stage, or step through it.
-          </p>
-          <Toolchain stages={course.toolchain.stages} />
-          {course.project && (
-            <ProjectCallout project={course.project} headingLevel="h3" />
+          {course.toolchain && (
+            <section
+              className="aic-section aic-section--toolchain"
+              aria-labelledby="toolchain-heading"
+            >
+              <h2 id="toolchain-heading" className="aic-label">
+                {course.toolchain.label}
+              </h2>
+              <p className="aic-hint">
+                An iterative loop. Select a stage, or step through it.
+              </p>
+              <Toolchain stages={course.toolchain.stages} />
+              {course.project && (
+                <ProjectCallout project={course.project} headingLevel="h3" />
+              )}
+            </section>
           )}
-        </section>
-      )}
 
-      {course.learned?.length ? (
-        <section className="aic-section" aria-labelledby="learned-heading">
-          <h2 id="learned-heading" className="aic-label">
-            What I learned
-          </h2>
-          <ul className="aic-list">
-            {course.learned.map((item) => (
-              <li key={item}>{item}</li>
-            ))}
-          </ul>
-        </section>
-      ) : null}
+          {/* shorter blocks sit side by side on wide screens */}
+          <div className="aic-pair">
+            {course.learned?.length ? (
+              <section className="aic-section" aria-labelledby="learned-heading">
+                <h2 id="learned-heading" className="aic-label">
+                  What I learned
+                </h2>
+                <ul className="aic-list">
+                  {course.learned.map((item) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ul>
+              </section>
+            ) : null}
 
-      {course.built?.length ? (
-        <section className="aic-section" aria-labelledby="built-heading">
-          <h2 id="built-heading" className="aic-label">
-            What I built
-          </h2>
-          <ul className="aic-list">
-            {course.built.map((item) => (
-              <li key={item}>{item}</li>
-            ))}
-          </ul>
-        </section>
-      ) : null}
+            {course.built?.length ? (
+              <section className="aic-section" aria-labelledby="built-heading">
+                <h2 id="built-heading" className="aic-label">
+                  What I built
+                </h2>
+                <ul className="aic-list">
+                  {course.built.map((item) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ul>
+              </section>
+            ) : null}
 
-      {course.reflection && (
-        <section className="aic-section" aria-labelledby="reflection-heading">
-          <h2 id="reflection-heading" className="aic-label">
-            {course.reflection.label}
-          </h2>
-          <p className="aic-reflection">{course.reflection.text}</p>
-        </section>
-      )}
+            {course.reflection && (
+              <section className="aic-section" aria-labelledby="reflection-heading">
+                <h2 id="reflection-heading" className="aic-label">
+                  {course.reflection.label}
+                </h2>
+                <p className="aic-reflection">{course.reflection.text}</p>
+              </section>
+            )}
 
-      {/* Shown inside the toolchain when there is one, otherwise on its own */}
-      {course.project && !course.toolchain && (
-        <section className="aic-section" aria-labelledby="project-heading">
-          <ProjectCallout project={course.project} headingLevel="h2" />
-        </section>
-      )}
+            {/* Shown inside the toolchain when there is one, otherwise on its own */}
+            {course.project && !course.toolchain && (
+              <section className="aic-section" aria-labelledby="project-heading">
+                <ProjectCallout project={course.project} headingLevel="h2" />
+              </section>
+            )}
 
-      {course.exercise && (
-        <section
-          className="aic-section aic-section--exercise"
-          aria-labelledby="exercise-heading"
-        >
-          <h2 id="exercise-heading" className="aic-label">
-            {course.exercise.label}
-          </h2>
-          <ExternalLinks links={course.exercise.links} />
+            {course.exercise && (
+              <section
+                className="aic-section aic-section--exercise"
+                aria-labelledby="exercise-heading"
+              >
+                <h2 id="exercise-heading" className="aic-label">
+                  {course.exercise.label}
+                </h2>
+                <ExternalLinks links={course.exercise.links} />
 
-          <details className="aic-collapse">
-            <summary className="aic-summary">
-              <span className="aic-toggle-text" aria-hidden="true" />
-              <span>write-up</span>
-              <span className="aic-chevron" aria-hidden="true">
-                ▾
-              </span>
-            </summary>
+                <details className="aic-collapse">
+                  <summary className="aic-summary">
+                    <span className="aic-toggle-text" aria-hidden="true" />
+                    <span>write-up</span>
+                    <span className="aic-chevron" aria-hidden="true">
+                      ▾
+                    </span>
+                  </summary>
 
-            <div className="aic-writeup">
-              <h3 className="aic-sublabel">Purpose</h3>
-              {course.exercise.purpose.map((para) => (
-                <p key={para} className="aic-text">
-                  {para}
-                </p>
-              ))}
-
-              {course.exercise.learned?.length ? (
-                <>
-                  <h3 className="aic-sublabel">What I learned</h3>
-                  <ul className="aic-list">
-                    {course.exercise.learned.map((item) => (
-                      <li key={item}>{item}</li>
+                  <div className="aic-writeup">
+                    <h3 className="aic-sublabel">Purpose</h3>
+                    {course.exercise.purpose.map((para) => (
+                      <p key={para} className="aic-text">
+                        {para}
+                      </p>
                     ))}
-                  </ul>
-                </>
-              ) : null}
 
-              {course.exercise.setup && (
-                <p className="aic-setup">
-                  <span className="aic-setup-label">Local setup</span>
-                  <span>{course.exercise.setup}</span>
-                </p>
-              )}
+                    {course.exercise.learned?.length ? (
+                      <>
+                        <h3 className="aic-sublabel">What I learned</h3>
+                        <ul className="aic-list">
+                          {course.exercise.learned.map((item) => (
+                            <li key={item}>{item}</li>
+                          ))}
+                        </ul>
+                      </>
+                    ) : null}
 
-              {course.exercise.implementation && (
-                <>
-                  <h3 className="aic-sublabel">What the R script did</h3>
-                  <p className="aic-text">{course.exercise.implementation}</p>
-                </>
-              )}
+                    {course.exercise.setup && (
+                      <p className="aic-setup">
+                        <span className="aic-setup-label">Local setup</span>
+                        <span>{course.exercise.setup}</span>
+                      </p>
+                    )}
+
+                    {course.exercise.implementation && (
+                      <>
+                        <h3 className="aic-sublabel">What the R script did</h3>
+                        <p className="aic-text">{course.exercise.implementation}</p>
+                      </>
+                    )}
+                  </div>
+                </details>
+              </section>
+            )}
+          </div>
+
+          {course.screenshots?.length ? (
+            <div className="aic-shots">
+              {course.screenshots.map((shot) => (
+                <Image
+                  key={shot.src}
+                  src={shot.src}
+                  alt={shot.alt}
+                  width={1600}
+                  height={1000}
+                  style={{ width: "100%", height: "auto", borderRadius: "4px" }}
+                />
+              ))}
             </div>
-          </details>
-        </section>
-      )}
+          ) : null}
 
-      {course.screenshots?.length ? (
-        <div className="aic-shots">
-          {course.screenshots.map((shot) => (
-            <Image
-              key={shot.src}
-              src={shot.src}
-              alt={shot.alt}
-              width={1600}
-              height={1000}
-              style={{ width: "100%", height: "auto", borderRadius: "4px" }}
-            />
-          ))}
+          {course.links?.length ? (
+            <section className="aic-section" aria-labelledby="links-heading">
+              <h2 id="links-heading" className="aic-label">
+                Links
+              </h2>
+              <ExternalLinks links={course.links} />
+            </section>
+          ) : null}
         </div>
-      ) : null}
-
-      {course.links?.length ? (
-        <section className="aic-section" aria-labelledby="links-heading">
-          <h2 id="links-heading" className="aic-label">
-            Links
-          </h2>
-          <ExternalLinks links={course.links} />
-        </section>
-      ) : null}
+      </div>
     </main>
   );
 }
@@ -835,6 +925,8 @@ function NumberedSection({
   allSections: CourseSection[];
 }) {
   const headingId = `${section.id}-heading`;
+  const hasMain = Boolean(section.description || section.contribution);
+  const hasLearned = Boolean(section.learned?.length);
   const nextIndex = section.continuesIn
     ? allSections.findIndex((s) => s.id === section.continuesIn!.sectionId)
     : -1;
@@ -850,24 +942,32 @@ function NumberedSection({
         {section.title}
       </h2>
       {section.context && <p className="aic-context">{section.context}</p>}
-      {section.description && <p className="aic-text">{section.description}</p>}
 
-      {section.contribution && (
-        <p className="aic-setup">
-          <span className="aic-setup-label">My contribution</span>
-          <span>{section.contribution}</span>
-        </p>
-      )}
-
-      {section.learned?.length ? (
-        <>
-          <h3 className="aic-sublabel">What I learned</h3>
-          <ul className="aic-list">
-            {section.learned.map((item) => (
-              <li key={item}>{item}</li>
-            ))}
-          </ul>
-        </>
+      {/* description beside the learning points on wide screens */}
+      {hasMain || hasLearned ? (
+        <div className={`aic-ns-grid${hasMain && hasLearned ? " aic-ns-grid--split" : ""}`}>
+          {hasMain && (
+            <div>
+              {section.description && <p className="aic-text">{section.description}</p>}
+              {section.contribution && (
+                <p className="aic-setup">
+                  <span className="aic-setup-label">My contribution</span>
+                  <span>{section.contribution}</span>
+                </p>
+              )}
+            </div>
+          )}
+          {hasLearned && (
+            <div>
+              <h3 className="aic-sublabel">What I learned</h3>
+              <ul className="aic-list">
+                {section.learned!.map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
       ) : null}
 
       {section.links?.length ? (
@@ -925,12 +1025,16 @@ function AgentProjectCard({ agent }: { agent: AgentCard }) {
       ) : null}
       <p className="aic-text">{agent.description}</p>
 
-      {agent.writeup?.map((part) => (
-        <div key={part.heading}>
-          <h4 className="aic-sublabel">{part.heading}</h4>
-          <p className="aic-text">{part.text}</p>
+      {agent.writeup?.length ? (
+        <div className="aic-writeup-grid">
+          {agent.writeup.map((part) => (
+            <div key={part.heading}>
+              <h4 className="aic-sublabel">{part.heading}</h4>
+              <p className="aic-text">{part.text}</p>
+            </div>
+          ))}
         </div>
-      ))}
+      ) : null}
 
       {agent.details?.length ? (
         <>
