@@ -6,205 +6,187 @@ export const metadata: Metadata = {
     "Professional and pet projects: the Masters Career App, and an econometrics paper on the IPL Impact Player rule that I’m looking to improve.",
 };
 
+function ExternalLink({
+  href,
+  children,
+  context,
+}: {
+  href: string;
+  children: React.ReactNode;
+  context?: string; // extra words for screen readers
+}) {
+  return (
+    <a href={href} target="_blank" rel="noopener noreferrer" className="pp-link">
+      {children}
+      <span className="sr-only">
+        {context ? ` ${context}` : ""} (opens in a new tab)
+      </span>
+    </a>
+  );
+}
+
 export default function ProjectsPage() {
   return (
     <main className="pp-page">
       <style>{`
         .pp-page {
-          min-height: 100vh;
-          background: var(--bg);
-          max-width: 700px;
+          max-width: 1180px;
           margin: 0 auto;
-          padding: 120px 48px 80px;
+          padding: 104px 40px 64px;
+          background: var(--bg);
         }
         .pp-title {
           font-family: var(--font-playfair), Georgia, serif;
-          font-size: clamp(48px, 7vw, 80px);
           font-style: italic;
           font-weight: 700;
+          font-size: clamp(2.4rem, 4vw, 3.25rem);
           line-height: 1.1;
           color: var(--accent);
-          margin-bottom: 40px;
         }
-        .pp-heading {
-          font-family: var(--font-jetbrains), ui-monospace, monospace;
-          font-size: 11px;
-          font-weight: 400;
-          letter-spacing: 2px;
-          text-transform: uppercase;
-          color: var(--accent2);
-          margin-bottom: 16px;
+        .pp-groups {
+          margin-top: 40px;
+          display: grid;
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          gap: 40px 64px;
+          align-items: start;
+        }
+        .pp-group-title {
+          font-family: var(--font-playfair), Georgia, serif;
+          font-weight: 700;
+          font-size: 1.5rem;
+          line-height: 1.25;
+          color: var(--text);
+        }
+        .pp-group-meta {
+          margin-top: 4px;
+          font-size: 13px;
+          line-height: 1.5;
+          color: var(--subtle);
         }
         .pp-list {
           list-style: none;
-          display: flex;
-          flex-direction: column;
-          gap: 8px;
+          margin-top: 16px;
+          border-top: 1px solid var(--accent2);
         }
-        .pp-item {
-          background: var(--panel);
-          border-left: 3px solid var(--accent2);
-          border-radius: 0 6px 6px 0;
-          padding: 18px 20px;
+        .pp-list--gold { border-top-color: var(--accent); }
+        .pp-entry {
+          padding: 18px 2px;
+          border-bottom: 1px solid var(--border);
+        }
+        .pp-entry-title {
+          font-family: var(--font-playfair), Georgia, serif;
+          font-weight: 700;
+          font-size: 1.2rem;
+          line-height: 1.3;
+          color: var(--text);
+        }
+        .pp-text {
           font-size: 14px;
           line-height: 1.7;
           color: var(--text);
         }
-        .pp-item--muted { color: var(--subtle); }
+        .pp-entry-title + .pp-text { margin-top: 6px; }
+        .pp-text--muted { color: var(--subtle); }
         .pp-note {
-          display: block;
           margin-top: 6px;
-          font-size: 12px;
+          font-size: 12.5px;
+          line-height: 1.6;
           color: var(--subtle);
+        }
+        .pp-links {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 6px 20px;
+          margin-top: 12px;
+          font-family: var(--font-jetbrains), ui-monospace, monospace;
+          font-size: 13px;
         }
         .pp-link {
           color: var(--accent);
           text-decoration: underline;
-          text-underline-offset: 3px;
-          white-space: nowrap;
+          text-decoration-thickness: 1px;
+          text-underline-offset: 4px;
+          transition: opacity 0.2s ease;
         }
-        .pp-link:hover { opacity: 0.8; }
+        .pp-link:hover { opacity: 0.75; }
         .pp-link:focus-visible {
           outline: 2px solid var(--accent);
           outline-offset: 3px;
           border-radius: 2px;
         }
-        .pp-section + .pp-section { margin-top: 48px; }
-        .pp-sub {
-          font-size: 13px;
-          line-height: 1.6;
-          color: var(--subtle);
-          margin: -8px 0 16px;
-        }
-        .pp-card {
-          background: var(--panel);
-          border-left: 3px solid var(--accent);
-          border-radius: 0 6px 6px 0;
-          padding: 24px;
-        }
-        .pp-card-title {
-          font-family: var(--font-playfair), Georgia, serif;
-          font-weight: 700;
-          font-size: clamp(1.25rem, 2.4vw, 1.5rem);
-          line-height: 1.3;
-          color: var(--text);
-        }
-        .pp-card-text {
-          margin-top: 10px;
-          font-size: 14px;
-          line-height: 1.7;
-          color: var(--text);
-        }
-        .pp-actions {
-          display: flex;
-          flex-wrap: wrap;
-          gap: 10px;
-          margin-top: 20px;
-        }
-        .pp-btn {
-          display: inline-flex;
-          align-items: center;
-          gap: 8px;
-          font-family: var(--font-jetbrains), ui-monospace, monospace;
-          font-size: 12px;
-          letter-spacing: 1px;
-          color: var(--accent);
-          border: 1px solid var(--accent);
-          border-radius: 3px;
-          padding: 10px 16px;
-          text-decoration: none;
-          transition: background 0.2s ease, color 0.2s ease;
-        }
-        .pp-btn:hover {
-          background: var(--accent);
-          color: var(--bg);
-        }
-        .pp-btn--primary {
-          font-weight: 600;
-          background: var(--accent);
-          color: var(--bg);
-        }
-        .pp-btn--primary:hover {
-          background: transparent;
-          color: var(--accent);
-        }
-        .pp-btn:focus-visible {
-          outline: 2px solid var(--accent);
-          outline-offset: 3px;
+
+        @media (max-width: 860px) {
+          .pp-groups { grid-template-columns: minmax(0, 1fr); gap: 36px; }
         }
         @media (max-width: 640px) {
-          .pp-page { padding: 104px 16px 64px; }
-          .pp-card { padding: 20px 18px; }
+          .pp-page { padding: 92px 16px 48px; }
+          .pp-groups { margin-top: 28px; }
+          .pp-entry { padding: 16px 0; }
         }
       `}</style>
 
-      <h1 className="pp-title">Projects</h1>
+      <h1 className="pp-title animate-fade-up">Projects</h1>
 
-      <section className="pp-section" aria-labelledby="professional-heading">
-        <h2 id="professional-heading" className="pp-heading">
-          Professional
-        </h2>
-        <article className="pp-card" aria-labelledby="career-app-heading">
-          <h3 id="career-app-heading" className="pp-card-title">
-            Masters Career App
-          </h3>
-          <p className="pp-card-text">
-            Built a career preparation app that scans GitHub repositories for
-            interview questions and SKILLS.md content, bringing together
-            practice questions to help users prepare for their target roles.
+      <div className="pp-groups">
+        <section aria-labelledby="professional-heading">
+          <h2 id="professional-heading" className="pp-group-title">
+            Professional
+          </h2>
+          <ul className="pp-list pp-list--gold">
+            <li className="pp-entry">
+              <h3 className="pp-entry-title">Masters Career App</h3>
+              <p className="pp-text">
+                Built a career preparation app that scans GitHub repositories
+                for interview questions and SKILLS.md content, bringing
+                together practice questions to help users prepare for their
+                target roles.
+              </p>
+              <p className="pp-links">
+                <ExternalLink
+                  href="https://smu-masters-career-app.vercel.app/"
+                  context="Masters Career App"
+                >
+                  Explore the App <span aria-hidden="true">→</span>
+                </ExternalLink>
+                <ExternalLink
+                  href="https://github.com/KeziahVickraman/smu-masters-career-app"
+                  context="for Masters Career App on GitHub"
+                >
+                  View Code <span aria-hidden="true">↗</span>
+                </ExternalLink>
+              </p>
+            </li>
+          </ul>
+        </section>
+
+        <section aria-labelledby="pet-heading">
+          <h2 id="pet-heading" className="pp-group-title">
+            Pet projects
+          </h2>
+          <p className="pp-group-meta">
+            Projects I’m interested in building, out of pure interest.
           </p>
-          <div className="pp-actions">
-            <a
-              href="https://smu-masters-career-app.vercel.app/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="pp-btn pp-btn--primary"
-            >
-              Explore the App <span aria-hidden="true">→</span>
-              <span className="sr-only"> Masters Career App (opens in a new tab)</span>
-            </a>
-            <a
-              href="https://github.com/KeziahVickraman/smu-masters-career-app"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="pp-btn"
-            >
-              View Code <span aria-hidden="true">↗</span>
-              <span className="sr-only"> for Masters Career App on GitHub (opens in a new tab)</span>
-            </a>
-          </div>
-        </article>
-      </section>
-
-      <section className="pp-section" aria-labelledby="pet-heading">
-        <h2 id="pet-heading" className="pp-heading">
-          Pet projects
-        </h2>
-        <p className="pp-sub">
-          Projects I’m interested in building, out of pure interest.
-        </p>
-        <ul className="pp-list">
-          <li className="pp-item">
-            Cricket: an econometrics project exploring the IPL Impact Player
-            rule —{" "}
-            <a
-              href="https://keziahvickraman.github.io/ipl-impact-player/ipl_impact_player_paper.html"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="pp-link"
-            >
-              live link <span aria-hidden="true">↗</span>
-              <span className="sr-only"> (opens in a new tab)</span>
-            </a>
-            <span className="pp-note">
-              The paper is finished; I’m now looking to make it better.
-            </span>
-          </li>
-          <li className="pp-item pp-item--muted">
-            More sports-related projects to come.
-          </li>
-        </ul>
-      </section>
+          <ul className="pp-list">
+            <li className="pp-entry">
+              <p className="pp-text">
+                Cricket: an econometrics project exploring the IPL Impact
+                Player rule —{" "}
+                <ExternalLink href="https://keziahvickraman.github.io/ipl-impact-player/ipl_impact_player_paper.html">
+                  live link <span aria-hidden="true">↗</span>
+                </ExternalLink>
+              </p>
+              <p className="pp-note">
+                The paper is finished; I’m now looking to make it better.
+              </p>
+            </li>
+            <li className="pp-entry">
+              <p className="pp-text pp-text--muted">
+                More sports-related projects to come.
+              </p>
+            </li>
+          </ul>
+        </section>
+      </div>
     </main>
   );
 }

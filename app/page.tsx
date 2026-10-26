@@ -40,170 +40,264 @@ export default function Home() {
   }, []);
 
   return (
-    <main className="h-screen overflow-hidden bg-bg">
-      <section
-        className="w-full h-full grid grid-cols-2 gap-[40px]"
-      >
-        {/* ── Left column ── */}
-        <div className="flex flex-col overflow-y-auto pl-12 lg:pl-20 pb-10 justify-start" style={{ paddingTop: "100px" }}>
+    <main className="hp">
+      <style>{`
+        /* Centred two-column page: text on the left, a framed photo and
+           the timeline beside it, so most of it is visible at once. */
+        .hp {
+          max-width: 1180px;
+          margin: 0 auto;
+          padding: 104px 40px 64px;
+          display: grid;
+          grid-template-columns: minmax(0, 1fr) 360px;
+          grid-template-areas:
+            "intro aside"
+            "about aside";
+          grid-template-rows: auto 1fr;
+          gap: 0 64px;
+        }
+        .hp-intro { grid-area: intro; }
+        .hp-about { grid-area: about; margin-top: 36px; }
+        .hp-aside {
+          grid-area: aside;
+          align-self: start;
+          position: sticky;
+          top: 96px;
+        }
 
-          {/* Location / discipline label */}
-          <p
-            className="font-mono text-xs tracking-widest text-muted uppercase animate-fade-up"
-          >
-            Singapore · Data Science · AI/ML · Intelligence Systems
-          </p>
+        .hp-eyebrow {
+          font-family: var(--font-jetbrains), ui-monospace, monospace;
+          font-size: 11px;
+          letter-spacing: 0.12em;
+          text-transform: uppercase;
+          color: var(--subtle);
+        }
+        .hp-name {
+          margin-top: 10px;
+          font-family: var(--font-playfair), Georgia, serif;
+          font-weight: 700;
+          font-size: clamp(2.6rem, 5vw, 4.25rem);
+          line-height: 0.98;
+          letter-spacing: -0.01em;
+        }
+        .hp-name span { display: block; }
+        .hp-name-first { color: var(--text); }
+        .hp-name-last { color: var(--accent); font-style: italic; }
+        .hp-roles {
+          list-style: none;
+          margin-top: 22px;
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
+          font-family: var(--font-jetbrains), ui-monospace, monospace;
+          font-size: 13px;
+          line-height: 1.6;
+          color: var(--subtle);
+        }
+        .hp-roles li { display: flex; gap: 10px; }
+        .hp-roles span[aria-hidden] { color: var(--accent); flex-shrink: 0; }
 
-          {/* Name */}
-          <div
-            className="animate-fade-up mt-3"
-            style={{ animationDelay: "120ms" }}
-          >
-            <h1
-              className="font-display font-bold leading-none tracking-tight"
-              style={{ fontSize: "clamp(2.75rem, 6.2vw, 5.5rem)" }}
-            >
-              <span className="text-warm block">KEZIAH</span>
-              <span className="block italic text-accent">Vickraman</span>
-            </h1>
-          </div>
+        .hp-heading {
+          font-family: var(--font-playfair), Georgia, serif;
+          font-style: italic;
+          font-weight: 400;
+          font-size: 1.25rem;
+          color: var(--accent);
+          padding-bottom: 8px;
+          margin-bottom: 14px;
+          border-bottom: 1px solid var(--border);
+        }
+        .hp-prose p {
+          max-width: 64ch;
+          font-family: var(--font-playfair), Georgia, serif;
+          font-size: 1rem;
+          line-height: 1.7;
+          color: var(--text);
+        }
+        .hp-prose p + p { margin-top: 1em; }
+        .hp-prose .hp-closing { font-style: italic; color: var(--accent); }
 
-          {/* Descriptor list */}
-          <ul
-            className="flex flex-col gap-2 animate-fade-up mt-10"
-            style={{ animationDelay: "260ms" }}
-          >
-            {DESCRIPTORS.map((item) => (
-              <li
-                key={item}
-                className="flex items-start gap-3 font-mono text-sm text-muted"
+        /* framed photo with plain dots underneath */
+        .hp-photo {
+          position: relative;
+          aspect-ratio: 4 / 5;
+          max-height: 440px;
+          width: 100%;
+          border-radius: 6px;
+          overflow: hidden;
+          background: var(--panel);
+        }
+        .hp-slide {
+          position: absolute;
+          inset: 0;
+          transition: opacity 0.7s ease;
+        }
+        .hp-dots {
+          display: flex;
+          justify-content: center;
+          gap: 4px;
+          margin-top: 6px;
+        }
+        .hp-dot {
+          width: 20px;
+          height: 20px;
+          display: grid;
+          place-items: center;
+          background: none;
+          border: none;
+          padding: 0;
+          cursor: inherit;
+          border-radius: 50%;
+        }
+        .hp-dot::before {
+          content: "";
+          width: 7px;
+          height: 7px;
+          border-radius: 50%;
+          background: var(--border);
+          transition: background 0.2s ease;
+        }
+        .hp-dot[aria-current="true"]::before { background: var(--accent); }
+        .hp-dot:focus-visible {
+          outline: 2px solid var(--accent);
+          outline-offset: 1px;
+        }
+
+        .hp-timeline { margin-top: 20px; }
+        .hp-timeline .hp-heading { margin-bottom: 4px; }
+        .hp-timeline ul { list-style: none; }
+        .hp-timeline li {
+          display: grid;
+          grid-template-columns: 142px minmax(0, 1fr);
+          gap: 10px;
+          padding: 7px 0;
+          border-bottom: 1px solid var(--border);
+          font-family: var(--font-jetbrains), ui-monospace, monospace;
+          font-size: 11.5px;
+          line-height: 1.5;
+        }
+        .hp-timeline li:last-child { border-bottom: none; }
+        .hp-year { color: var(--accent); }
+        .hp-desc { color: var(--text); }
+
+        /* Phone and narrow tablet: one column — intro, photo, about, timeline */
+        @media (max-width: 959px) {
+          .hp {
+            padding: 92px 16px 48px;
+            grid-template-columns: minmax(0, 1fr);
+            grid-template-areas: "intro" "aside" "about";
+            grid-template-rows: auto;
+          }
+          .hp-aside {
+            position: static;
+            margin-top: 28px;
+            display: grid;
+            grid-template-columns: minmax(0, 1fr);
+            gap: 0 32px;
+          }
+          .hp-photo { max-height: none; aspect-ratio: 4 / 3; }
+          .hp-about { margin-top: 32px; }
+        }
+        @media (min-width: 640px) and (max-width: 959px) {
+          /* tablet: photo and timeline side by side under the intro */
+          .hp-aside { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: start; }
+          .hp-photo { aspect-ratio: 4 / 5; }
+          .hp-timeline { margin-top: 0; }
+        }
+      `}</style>
+
+      {/* ── Name and roles ── */}
+      <div className="hp-intro animate-fade-up">
+        <p className="hp-eyebrow">
+          Singapore · Data Science · AI/ML · Intelligence Systems
+        </p>
+        <h1 className="hp-name">
+          <span className="hp-name-first">KEZIAH</span>
+          <span className="hp-name-last">Vickraman</span>
+        </h1>
+        <ul className="hp-roles">
+          {DESCRIPTORS.map((item) => (
+            <li key={item}>
+              <span aria-hidden="true">—</span>
+              <span>{item}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      {/* ── Photo and timeline ── */}
+      <aside className="hp-aside animate-fade-up" style={{ animationDelay: "120ms" }}>
+        <div>
+          <div className="hp-photo">
+            {PHOTOS.map((photo, i) => (
+              <div
+                key={photo.src}
+                className="hp-slide"
+                style={{ opacity: i === current ? 1 : 0 }}
               >
-                <span
-                  className="mt-px shrink-0 text-accent"
-                  aria-hidden="true"
-                >
-                  —
-                </span>
-                <span>{item}</span>
+                <Image
+                  src={photo.src}
+                  alt={photo.alt}
+                  fill
+                  sizes="(min-width: 960px) 360px, (min-width: 640px) 50vw, 100vw"
+                  className="object-cover object-center"
+                  priority={i === 0}
+                />
+              </div>
+            ))}
+          </div>
+          <div className="hp-dots">
+            {PHOTOS.map((photo, i) => (
+              <button
+                key={photo.src}
+                type="button"
+                className="hp-dot"
+                onClick={() => setCurrent(i)}
+                aria-label={`Go to photo ${i + 1}`}
+                aria-current={i === current}
+              />
+            ))}
+          </div>
+        </div>
+
+        <section className="hp-timeline" aria-labelledby="timeline-heading">
+          <h2 id="timeline-heading" className="hp-heading">Timeline</h2>
+          <ul>
+            {CREDENTIALS.map((c) => (
+              <li key={c.year + c.desc}>
+                <span className="hp-year">{c.year}</span>
+                <span className="hp-desc">{c.desc}</span>
               </li>
             ))}
           </ul>
+        </section>
+      </aside>
 
-          {/* Credentials */}
-          <div
-            className="animate-fade-up"
-            style={{ animationDelay: "340ms", marginTop: "48px" }}
-          >
-            <div style={{
-              background: "var(--card)",
-              padding: "20px",
-              borderRadius: "8px",
-              borderLeft: "3px solid var(--accent)",
-            }}>
-              <p className="font-mono text-accent uppercase mb-3" style={{ fontSize: "13px", letterSpacing: "0.15em" }}>
-                Timeline
-              </p>
-              <ul className="flex flex-col gap-1">
-                {CREDENTIALS.map((c) => (
-                  <li key={c.year + c.desc} className="font-mono" style={{ fontSize: "0.72rem" }}>
-                    <span className="text-accent">{c.year}</span>
-                    <span className="text-warm"> · {c.desc}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-
-          {/* About prose */}
-          <div
-            className="animate-fade-up"
-            style={{ animationDelay: "420ms", marginTop: "24px" }}
-          >
-            <div style={{
-              background: "var(--card)",
-              padding: "20px",
-              borderRadius: "8px",
-              borderLeft: "3px solid var(--accent)",
-            }}>
-            <p className="font-mono text-accent uppercase mb-3" style={{ fontSize: "13px", letterSpacing: "0.15em" }}>
-              About
-            </p>
-            <p
-              className="font-display text-warm leading-relaxed"
-              style={{ fontSize: "clamp(0.88rem, 1.1vw, 1rem)", marginBottom: "1.2em" }}
-            >
-              I sit at the intersection of quantitative rigour and human meaning — what I call being a quantitative poet.
-            </p>
-            <p
-              className="font-display text-warm leading-relaxed"
-              style={{ fontSize: "clamp(0.88rem, 1.1vw, 1rem)", marginBottom: "1.2em" }}
-            >
-              From Sep 2025 to Jul 2026, I was a Business Analyst at Unison Group, where I bridged Finance and IT on regulatory and systems projects, including Basel III reforms implementation. Beyond my core scope, I independently built and deployed internal AI agents — spanning document parsing, workflow automation, RAG-based chatbots, and email automation — bringing AI adoption into the organisation from the ground up.
-            </p>
-            <p
-              className="font-display text-warm leading-relaxed"
-              style={{ fontSize: "clamp(0.88rem, 1.1vw, 1rem)", marginBottom: "1.2em" }}
-            >
-              I also teach at SMU Academy and the SMU Masters programmes as a Teaching Assistant — covering Python, R, machine learning, causal inference, and CX/UX — because I believe the best analysts need to be able to translate and explain technicalities to anyone.
-            </p>
-            <p
-              className="font-display text-warm leading-relaxed"
-              style={{ fontSize: "clamp(0.88rem, 1.1vw, 1rem)", marginBottom: "1.2em" }}
-            >
-              Sport is not a hobby — it&rsquo;s a lens. As an ex-competitive player, I&rsquo;m drawn to the decision architectures of fast-reaction sports: how performance data can surface insights that intuition alone misses. I&rsquo;m actively exploring where AI and sports analytics intersect, bringing the same rigour I apply to financial and product problems into that space.
-            </p>
-            <p
-              className="font-display text-accent leading-relaxed italic"
-              style={{ fontSize: "clamp(0.88rem, 1.1vw, 1rem)" }}
-            >
-              I build things that think, and I think about things that matter.
-            </p>
-            </div>
-          </div>
-
-          {/* Why this cursor? */}
-          <div className="animate-fade-up" style={{ animationDelay: "500ms" }}>
-            <CursorNote />
-          </div>
+      {/* ── About ── */}
+      <section
+        className="hp-about animate-fade-up"
+        style={{ animationDelay: "200ms" }}
+        aria-labelledby="about-heading"
+      >
+        <h2 id="about-heading" className="hp-heading">About</h2>
+        <div className="hp-prose">
+          <p>
+            I sit at the intersection of quantitative rigour and human meaning — what I call being a quantitative poet.
+          </p>
+          <p>
+            From Sep 2025 to Jul 2026, I was a Business Analyst at Unison Group, where I bridged Finance and IT on regulatory and systems projects, including Basel III reforms implementation. Beyond my core scope, I independently built and deployed internal AI agents — spanning document parsing, workflow automation, RAG-based chatbots, and email automation — bringing AI adoption into the organisation from the ground up.
+          </p>
+          <p>
+            I also teach at SMU Academy and the SMU Masters programmes as a Teaching Assistant — covering Python, R, machine learning, causal inference, and CX/UX — because I believe the best analysts need to be able to translate and explain technicalities to anyone.
+          </p>
+          <p>
+            Sport is not a hobby — it&rsquo;s a lens. As an ex-competitive player, I&rsquo;m drawn to the decision architectures of fast-reaction sports: how performance data can surface insights that intuition alone misses. I&rsquo;m actively exploring where AI and sports analytics intersect, bringing the same rigour I apply to financial and product problems into that space.
+          </p>
+          <p className="hp-closing">
+            I build things that think, and I think about things that matter.
+          </p>
         </div>
-
-        {/* ── Right column — full-height photo carousel ── */}
-        <div
-          className="relative overflow-hidden animate-fade-up"
-          style={{ animationDelay: "180ms" }}
-        >
-          {PHOTOS.map((photo, i) => (
-            <div
-              key={photo.src}
-              className="absolute inset-0 transition-opacity duration-700"
-              style={{ opacity: i === current ? 1 : 0 }}
-            >
-              <Image
-                src={photo.src}
-                alt={photo.alt}
-                fill
-                sizes="50vw"
-                className="object-cover object-center"
-                priority={i === 0}
-              />
-            </div>
-          ))}
-
-          {/* Carousel dots — overlaid at bottom of photo */}
-          <div className="absolute bottom-4 left-0 right-0 flex justify-center gap-2 z-10">
-            {PHOTOS.map((_, i) => (
-              <button
-                key={i}
-                onClick={() => setCurrent(i)}
-                aria-label={`Go to photo ${i + 1}`}
-                className="w-2 h-2 rounded-full transition-colors"
-                style={{
-                  backgroundColor: i === current ? "var(--accent)" : "rgba(255,255,255,0.35)",
-                }}
-              />
-            ))}
-          </div>
-        </div>
+        <CursorNote />
       </section>
     </main>
   );

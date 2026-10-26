@@ -13,59 +13,57 @@ export const metadata: Metadata = {
     "Exploring AI through professional learning and the SMU Master of Science in Business AI.",
 };
 
-// ── Course card ────────────────────────────────────────────────────────────
+// ── Course row ─────────────────────────────────────────────────────────────
 // Courses with content link to their own page; the rest show a placeholder.
 
-function CourseCard({ course }: { course: Course }) {
+function CourseRow({ course }: { course: Course }) {
   if (!hasPortfolioContent(course)) {
     return (
-      <li className="ai-card">
-        <h3 className="ai-card-title">{course.title}</h3>
-        <p className="ai-card-status">Portfolio content coming soon</p>
+      <li className="ai-row">
+        <h3 className="ai-row-title">{course.title}</h3>
+        <span className="ai-row-soon">Coming soon</span>
       </li>
     );
   }
 
   return (
     <li>
-      <Link href={`/ai/${course.id}`} className="ai-card ai-card--link">
-        <h3 className="ai-card-title">{course.title}</h3>
-        <p className="ai-card-cta">
-          View course <span aria-hidden="true" className="ai-card-arrow">→</span>
-        </p>
+      <Link href={`/ai/${course.id}`} className="ai-row ai-row--link">
+        <h3 className="ai-row-title">{course.title}</h3>
+        <span className="ai-row-cta">
+          View course <span aria-hidden="true" className="ai-row-arrow">→</span>
+        </span>
       </Link>
     </li>
   );
 }
 
-// ── Panel ──────────────────────────────────────────────────────────────────
+// ── Course group ───────────────────────────────────────────────────────────
 
-function CoursePanel({ group }: { group: CourseGroup }) {
+function CourseGroupList({ group }: { group: CourseGroup }) {
   const headingId = `${group.id}-heading`;
 
   return (
     <section
       aria-labelledby={headingId}
-      className={`ai-panel ai-panel--${group.accent}`}
+      className={`ai-group ai-group--${group.accent}`}
     >
-      <p className="ai-panel-label">{group.label}</p>
-      <h2 id={headingId} className="ai-panel-title">
+      <h2 id={headingId} className="ai-group-title">
         {group.title}
       </h2>
-      {group.period && (
-        <p className="ai-panel-period">
-          {group.period.dates}
-          {group.period.status && (
-            <>
-              <span className="sr-only"> · </span>
-              <span className="ai-panel-status">{group.period.status}</span>
-            </>
-          )}
-        </p>
-      )}
-      <ul className="ai-card-grid">
+      <p className="ai-group-meta">
+        {group.label}
+        {group.period && (
+          <>
+            {" · "}
+            {group.period.dates}
+            {group.period.status && <> · {group.period.status.toLowerCase()}</>}
+          </>
+        )}
+      </p>
+      <ul className="ai-rows">
         {group.courses.map((course) => (
-          <CourseCard key={course.id} course={course} />
+          <CourseRow key={course.id} course={course} />
         ))}
       </ul>
     </section>
@@ -79,142 +77,101 @@ export default function AIPage() {
     <main className="ai-page">
       <style>{`
         .ai-page {
-          --ai-panel-accent: var(--accent);
-          --ai-soft: var(--subtle);
-          min-height: 100vh;
-          background: var(--bg);
-          max-width: 1200px;
+          max-width: 1180px;
           margin: 0 auto;
-          padding: 120px 48px 80px;
+          padding: 104px 40px 64px;
+          background: var(--bg);
         }
         .ai-title {
           font-family: var(--font-playfair), Georgia, serif;
           font-style: italic;
           font-weight: 700;
-          font-size: clamp(48px, 7vw, 80px);
+          font-size: clamp(2.4rem, 4vw, 3.25rem);
           line-height: 1.1;
           color: var(--accent);
-          margin-bottom: 16px;
         }
         .ai-intro {
+          margin-top: 8px;
+          max-width: 60ch;
           font-family: var(--font-playfair), Georgia, serif;
-          font-style: italic;
-          font-size: 18px;
+          font-size: 1.05rem;
           line-height: 1.6;
-          color: var(--ai-soft);
-          max-width: 640px;
-          margin-bottom: 56px;
+          color: var(--subtle);
         }
-        .ai-panels {
+        .ai-groups {
+          margin-top: 40px;
           display: grid;
-          grid-template-columns: 1fr;
-          gap: 24px;
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          gap: 40px 64px;
         }
-        @media (min-width: 900px) {
-          .ai-panels {
-            grid-template-columns: 1fr 1fr;
-            align-items: stretch;
-          }
-        }
-        .ai-panel {
-          background: var(--surface);
-          border: 1px solid var(--border);
-          border-top: 2px solid var(--ai-panel-accent);
-          border-radius: 6px;
-          padding: 32px;
-        }
-        .ai-panel--gold { --ai-panel-accent: var(--accent); }
-        .ai-panel--teal { --ai-panel-accent: var(--accent2); }
-        .ai-panel-label {
-          font-family: var(--font-jetbrains), ui-monospace, monospace;
-          font-size: 10px;
-          letter-spacing: 3px;
-          text-transform: uppercase;
-          color: var(--ai-panel-accent);
-          margin-bottom: 8px;
-        }
-        .ai-panel-title {
+
+        /* each group: a heading, one line of context, a ruled list */
+        .ai-group--gold { --ai-accent: var(--accent); }
+        .ai-group--teal { --ai-accent: var(--accent2); }
+        .ai-group-title {
           font-family: var(--font-playfair), Georgia, serif;
-          font-style: italic;
           font-weight: 700;
-          font-size: clamp(1.6rem, 3vw, 2.2rem);
-          line-height: 1.2;
+          font-size: 1.5rem;
+          line-height: 1.25;
           color: var(--text);
-          margin-bottom: 28px;
         }
-        .ai-panel-title:has(+ .ai-panel-period) { margin-bottom: 10px; }
-        .ai-panel-period {
-          display: flex;
-          flex-wrap: wrap;
-          align-items: center;
-          gap: 8px 12px;
-          font-family: var(--font-jetbrains), ui-monospace, monospace;
-          font-size: 12px;
-          letter-spacing: 0.5px;
-          color: var(--ai-soft);
-          margin-bottom: 28px;
+        .ai-group-meta {
+          margin-top: 4px;
+          font-size: 13px;
+          line-height: 1.5;
+          color: var(--subtle);
         }
-        .ai-panel-status {
-          font-size: 10px;
-          letter-spacing: 1.5px;
-          text-transform: uppercase;
-          color: var(--ai-panel-accent);
-          border: 1px solid var(--ai-panel-accent);
-          border-radius: 999px;
-          padding: 2px 10px;
-        }
-        .ai-card-grid {
+        .ai-rows {
           list-style: none;
+          margin-top: 16px;
+          border-top: 1px solid var(--ai-accent);
+        }
+        .ai-row {
           display: flex;
-          flex-direction: column;
-          gap: 12px;
+          align-items: baseline;
+          justify-content: space-between;
+          gap: 16px;
+          padding: 14px 2px;
+          border-bottom: 1px solid var(--border);
+          text-decoration: none;
         }
-        .ai-card {
-          background: var(--panel);
-          border-radius: 6px;
-          border-left: 3px solid var(--ai-panel-accent);
-          padding: 20px;
-        }
-        .ai-card-title {
+        .ai-row-title {
           font-family: var(--font-jetbrains), ui-monospace, monospace;
           font-size: 14px;
-          font-weight: 600;
+          font-weight: 400;
           line-height: 1.5;
           color: var(--text);
         }
-        .ai-card-status {
+        .ai-row-soon,
+        .ai-row-cta {
+          flex-shrink: 0;
           font-family: var(--font-jetbrains), ui-monospace, monospace;
-          font-size: 11px;
-          letter-spacing: 1px;
-          color: var(--ai-soft);
-          margin-top: 8px;
+          font-size: 12px;
+          white-space: nowrap;
         }
-        .ai-card--link {
-          display: block;
-          text-decoration: none;
-          transition: background 0.2s ease;
-        }
-        .ai-card--link:hover { background: var(--raised); }
-        .ai-card--link:focus-visible {
-          outline: 2px solid var(--ai-panel-accent);
-          outline-offset: 3px;
-        }
-        .ai-card-cta {
-          font-family: var(--font-jetbrains), ui-monospace, monospace;
-          font-size: 11px;
-          letter-spacing: 1px;
-          color: var(--ai-panel-accent);
-          margin-top: 8px;
-        }
-        .ai-card-arrow {
+        .ai-row-soon { color: var(--subtle); }
+        .ai-row-cta { color: var(--ai-accent); }
+        .ai-row-arrow {
           display: inline-block;
           transition: transform 0.2s ease;
         }
-        .ai-card--link:hover .ai-card-arrow { transform: translateX(4px); }
+        .ai-row--link .ai-row-title { transition: color 0.2s ease; }
+        .ai-row--link:hover .ai-row-title { color: var(--ai-accent); }
+        .ai-row--link:hover .ai-row-arrow { transform: translateX(4px); }
+        .ai-row--link:focus-visible {
+          outline: 2px solid var(--ai-accent);
+          outline-offset: 2px;
+          border-radius: 2px;
+        }
+
+        @media (max-width: 860px) {
+          .ai-groups { grid-template-columns: minmax(0, 1fr); gap: 36px; }
+        }
         @media (max-width: 640px) {
-          .ai-page { padding: 104px 16px 64px; }
-          .ai-intro { font-size: 16px; margin-bottom: 40px; }
-          .ai-panel { padding: 24px 16px; }
+          .ai-page { padding: 92px 16px 48px; }
+          .ai-groups { margin-top: 28px; }
+          .ai-row { padding: 12px 0; }
+          .ai-row-title { font-size: 13.5px; }
         }
       `}</style>
 
@@ -226,9 +183,9 @@ export default function AIPage() {
         </p>
       </header>
 
-      <div className="ai-panels">
+      <div className="ai-groups">
         {COURSE_GROUPS.map((group) => (
-          <CoursePanel key={group.id} group={group} />
+          <CourseGroupList key={group.id} group={group} />
         ))}
       </div>
     </main>
